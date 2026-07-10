@@ -1,0 +1,29 @@
+# Font
+font-family = JetBrainsMono Nerd Font
+font-size = 14
+font-thicken = true
+
+# Window
+window-padding-x = 12
+window-padding-y = 12
+window-padding-balance = true
+background-opacity = 0.92
+background-blur = 20
+unfocused-split-opacity = 0.6
+
+# macOS
+macos-option-as-alt = left
+shell-integration = detect
+window-save-state = always
+
+# Theme (Tokyo Night to match the Neovim colorscheme)
+theme = tokyonight_storm
+
+# Cursor / mouse
+cursor-style = block
+cursor-style-blink = true
+mouse-hide-while-typing = true
+copy-on-select = clipboard
+
+# Keep true 256-color terminfo for tmux
+term = xterm-256color

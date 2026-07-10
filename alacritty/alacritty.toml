@@ -1,0 +1,23 @@
+# Alacritty alternative to Ghostty (see README — everything else in the
+# setup is terminal-agnostic). Font/theme values match the Ghostty config;
+# adjust window padding etc. to taste.
+
+[font]
+size = 14
+
+[font.normal]
+family = "JetBrainsMono Nerd Font"
+
+[window]
+padding = { x = 12, y = 12 }
+opacity = 0.92
+
+[colors.primary]
+background = "#1a1b26"
+foreground = "#c0caf5"
+
+# Required for Shift+Enter to reach Claude Code correctly inside tmux.
+[[keyboard.bindings]]
+key = "Return"
+mods = "Shift"
+chars = "[13;2u"

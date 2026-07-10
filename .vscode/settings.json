@@ -1,0 +1,7 @@
+{
+    "editor.fontFamily": "'Fira Code Nerd Font', monospace",
+    "editor.fontLigatures": true,
+    "editor.rulers": [120],
+    "terminal.integrated.fontFamily": "'MesloLGL Nerd Font'",
+    "terminal.integrated.fontSize": 14,
+}
