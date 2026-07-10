@@ -149,8 +149,11 @@ Folds start fully open (`foldlevel`/`foldlevelstart = 99`) — these are for whe
 | `Ctrl-p` | Telescope: git files (custom) |
 | `<leader>ps` | Telescope: grep string, prompts for input (custom) |
 | `:bn` / `:bp` | Next / previous buffer |
-| `:bd` | Close buffer |
+| `:bd` / `<leader>bd` | Close buffer |
 | `Ctrl-w s` / `Ctrl-w v` | Split window horizontally / vertically |
+| `Alt-1` ... `Alt-9` | Jump directly to buffer tab N (bufferline) |
+| `Alt-,` / `Alt-.` | Previous / next buffer tab (bufferline) |
+| `Ctrl-o` / `Ctrl-i` | Jump back / forward in jumplist — **the fast way back** after `gd` jumps you to another file |
 
 ### LSP (on attach — `gopls`, `pyright`, `intelephense`, `ts_ls`, `ruff`, `terraformls`, etc.)
 
@@ -173,13 +176,18 @@ Folds start fully open (`foldlevel`/`foldlevelstart = 99`) — these are for whe
 | `Ctrl-y` | Accept completion |
 | `Tab` / `Shift-Tab` or arrows | Navigate suggestions |
 
-### Git (fugitive + gitsigns + lazygit)
+### Git (fugitive + gitsigns + lazygit + telescope)
 
 | Key | Action |
 |---|---|
 | `<leader>gs` | Open `:Git` status (fugitive) |
 | `<leader>gg` | Open LazyGit in a floating window — branch tree, staging, rebase, stash, all interactive |
+| `<leader>gf` | Telescope: changed files (`git status`) — VS Code SCM panel-style file list |
 | `<leader>gb` | Toggle inline current-line git blame (gitsigns) |
+| `]h` / `[h` | Jump to next / previous changed hunk (gitsigns) |
+| `<leader>hp` | Preview hunk diff in a popup (gitsigns) |
+| `<leader>hs` | Stage hunk (gitsigns) |
+| `<leader>hr` | Reset/discard hunk (gitsigns) |
 | gitsigns gutter | Shows added/changed/removed lines automatically |
 
 Statusline (lualine) shows the current branch name at the bottom at all times — no key needed.
@@ -191,6 +199,16 @@ Statusline (lualine) shows the current branch name at the bottom at all times �
 | `<leader>a` | Add current file to Harpoon |
 | `Ctrl-e` | Toggle Harpoon quick menu |
 | `<leader>1` / `2` / `3` / `4` | Jump to Harpoon file 1-4 (remapped off `Ctrl-h/j/k/l` to avoid clashing with tmux-navigator) |
+
+### Testing (neotest + neotest-phpunit)
+
+| Key | Action |
+|---|---|
+| `<leader>tt` | Run nearest test (function under cursor) |
+| `<leader>tf` | Run all tests in current file |
+| `<leader>ts` | Toggle test summary sidebar (pass/fail tree) |
+| `<leader>to` | Open output for test under cursor |
+| `<leader>tO` | Toggle persistent test output panel |
 
 ### Undo history
 

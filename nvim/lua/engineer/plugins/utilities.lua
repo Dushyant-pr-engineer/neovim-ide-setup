@@ -43,7 +43,13 @@ return {
             current_line_blame = true,
             current_line_blame_opts = { delay = 300 },
             on_attach = function(bufnr)
-                vim.keymap.set("n", "<leader>gb", require("gitsigns").toggle_current_line_blame, { buffer = bufnr })
+                local gitsigns = require("gitsigns")
+                vim.keymap.set("n", "<leader>gb", gitsigns.toggle_current_line_blame, { buffer = bufnr })
+                vim.keymap.set("n", "]h", gitsigns.next_hunk, { buffer = bufnr, desc = "Next git hunk" })
+                vim.keymap.set("n", "[h", gitsigns.prev_hunk, { buffer = bufnr, desc = "Prev git hunk" })
+                vim.keymap.set("n", "<leader>hp", gitsigns.preview_hunk, { buffer = bufnr, desc = "Preview hunk diff" })
+                vim.keymap.set("n", "<leader>hs", gitsigns.stage_hunk, { buffer = bufnr, desc = "Stage hunk" })
+                vim.keymap.set("n", "<leader>hr", gitsigns.reset_hunk, { buffer = bufnr, desc = "Reset hunk" })
             end,
         },
     },
