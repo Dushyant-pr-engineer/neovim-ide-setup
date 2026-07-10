@@ -41,7 +41,7 @@ else
 fi
 
 echo "== Step 2: Dependencies (Apple Silicon) =="
-brew install tmux ripgrep fzf coreutils
+brew install neovim tmux ripgrep fzf coreutils
 brew install --cask font-jetbrains-mono-nerd-font
 brew install node python go pipx
 brew install php composer
@@ -61,7 +61,27 @@ if [[ ! -d "$HOME/.oh-my-zsh" ]]; then
 else
     backup_and_copy "$SCRIPT_DIR/zsh/aliases.zsh" "$ZSH_CUSTOM_DIR/aliases.zsh"
     backup_and_copy "$SCRIPT_DIR/zsh/exports.zsh" "$ZSH_CUSTOM_DIR/exports.zsh"
-    backup_and_copy "$SCRIPT_DIR/zsh/tmux-autostart.zsh" "$ZSH_CUSTOM_DIR/tmux-autostart.zsh"
+
+    # tmux-autostart.zsh is NOT a $ZSH_CUSTOM file: oh-my-zsh.sh (and thus
+    # $ZSH_CUSTOM) is sourced after Powerlevel10k's instant-prompt block has
+    # already started, and tmux needs to take over the tty before that block
+    # runs (see the comment inside zsh/tmux-autostart.zsh). So it gets
+    # prepended directly to the top of ~/.zshrc instead, guarded by a marker
+    # so re-running this script doesn't duplicate it.
+    TMUX_MARKER="# >>> neovim-ide-setup tmux auto-attach >>>"
+    if [[ -f "$HOME/.zshrc" ]] && grep -qF "$TMUX_MARKER" "$HOME/.zshrc"; then
+        echo "tmux auto-attach already present in ~/.zshrc, skipping"
+    else
+        echo "Backing up ~/.zshrc -> ~/.zshrc.bak-${STAMP} (if it exists)"
+        [[ -f "$HOME/.zshrc" ]] && cp "$HOME/.zshrc" "$HOME/.zshrc.bak-${STAMP}"
+        {
+            cat "$SCRIPT_DIR/zsh/tmux-autostart.zsh"
+            echo
+            [[ -f "$HOME/.zshrc" ]] && cat "$HOME/.zshrc"
+        } >"$HOME/.zshrc.new"
+        mv "$HOME/.zshrc.new" "$HOME/.zshrc"
+        echo "Prepended tmux auto-attach to the top of ~/.zshrc"
+    fi
 fi
 
 echo "== Step 4: Tmux =="

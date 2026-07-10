@@ -14,7 +14,7 @@ neovim-ide-setup/
 ├── zsh/
 │   ├── aliases.zsh          -> $ZSH_CUSTOM/aliases.zsh
 │   ├── exports.zsh          -> $ZSH_CUSTOM/exports.zsh
-│   └── tmux-autostart.zsh   -> $ZSH_CUSTOM/tmux-autostart.zsh
+│   └── tmux-autostart.zsh   -> prepended to the top of ~/.zshrc
 └── nvim/                    -> ~/.config/nvim/
     ├── init.lua
     └── lua/engineer/
@@ -47,8 +47,8 @@ chmod +x install.sh
 ./install.sh --alacritty  # keep Alacritty instead
 ```
 
-The script installs Homebrew packages (tmux, ripgrep, fzf, coreutils, the
-Nerd Font, node/python/go/pipx, php/composer, terraform), clones `tpm`, and
+The script installs Homebrew packages (neovim, tmux, ripgrep, fzf, coreutils,
+the Nerd Font, node/python/go/pipx, php/composer, terraform), clones `tpm`, and
 copies every config file into place — backing up anything already there as
 `<file>.bak-<timestamp>` rather than clobbering it.
 
@@ -85,13 +85,19 @@ copies every config file into place — backing up anything already there as
   `FocusGained,BufEnter -> checktime` autocommand added to `options.lua`,
   per Step 12's note about picking up file changes made by Claude Code in
   the adjacent tmux window.
-- **Zsh tmux auto-attach**: shipped as Option A (a plain
-  `tmux-autostart.zsh` custom file) since it doesn't carry the "can
-  interact oddly with oh-my-tmux" caveat the plan raises about Option B
-  (the Oh-My-Zsh `tmux` plugin). To switch to Option B instead, remove
-  `tmux-autostart.zsh`, add `tmux` to the `plugins=(...)` array in
-  `~/.zshrc`, and add the three `ZSH_TMUX_*` exports from the plan to
-  `exports.zsh`.
+- **Zsh tmux auto-attach**: shipped as Option A (a plain auto-attach
+  snippet) since it doesn't carry the "can interact oddly with oh-my-tmux"
+  caveat the plan raises about Option B (the Oh-My-Zsh `tmux` plugin). It's
+  prepended directly to the top of `~/.zshrc` — *above* Powerlevel10k's
+  instant-prompt block — rather than installed as a `$ZSH_CUSTOM` file,
+  because `$ZSH_CUSTOM` is sourced by `oh-my-zsh.sh` only after instant-prompt
+  has already started buffering console output, and tmux needs to take over
+  the tty directly to attach/create a session. Running it that late causes
+  `open terminal failed: not a terminal`. `install.sh` guards the insert with
+  a marker comment so re-running it doesn't duplicate the block. To switch to
+  Option B instead, remove the marked block from `~/.zshrc`, add `tmux` to the
+  `plugins=(...)` array, and add the three `ZSH_TMUX_*` exports from the plan
+  to `exports.zsh`.
 - **intelephense license**: left commented out in `lsp_settings.lua` — free
   tier works for hover/completion/diagnostics; uncomment and point at
   `~/intelephense/licence.txt` if you buy the paid license later for
