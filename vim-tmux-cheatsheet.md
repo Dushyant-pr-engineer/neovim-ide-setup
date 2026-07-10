@@ -125,6 +125,19 @@ Leader key is `<Space>`.
 | `:%s/old/new/g` | Replace all in file |
 | `:%s/old/new/gc` | Replace all, confirm each |
 
+### Folding (treesitter-based)
+
+Folds start fully open (`foldlevel`/`foldlevelstart = 99`) — these are for when you fold something manually and want it back.
+
+| Key | Action |
+|---|---|
+| `za` | Toggle fold under cursor |
+| `zo` / `zc` | Open / close fold under cursor |
+| `zO` / `zC` | Open / close fold under cursor, recursively (nested folds too) |
+| `zR` | Open all folds in buffer |
+| `zM` | Close all folds in buffer |
+| `zj` / `zk` | Jump to next / previous fold |
+
 ### Windows, buffers, files
 
 | Key | Action |
@@ -158,12 +171,16 @@ Leader key is `<Space>`.
 | `Ctrl-y` | Accept completion |
 | `Tab` / `Shift-Tab` or arrows | Navigate suggestions |
 
-### Git (fugitive + gitsigns)
+### Git (fugitive + gitsigns + lazygit)
 
 | Key | Action |
 |---|---|
 | `<leader>gs` | Open `:Git` status (fugitive) |
+| `<leader>gg` | Open LazyGit in a floating window — branch tree, staging, rebase, stash, all interactive |
+| `<leader>gb` | Toggle inline current-line git blame (gitsigns) |
 | gitsigns gutter | Shows added/changed/removed lines automatically |
+
+Statusline (lualine) shows the current branch name at the bottom at all times — no key needed.
 
 ### Harpoon (quick file switching)
 

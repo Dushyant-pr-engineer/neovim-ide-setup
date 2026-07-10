@@ -48,9 +48,11 @@ chmod +x install.sh
 ```
 
 The script installs Homebrew packages (neovim, tmux, ripgrep, fzf, coreutils,
-the Nerd Font, node/python/go/pipx, php/composer, terraform), clones `tpm`, and
-copies every config file into place — backing up anything already there as
-`<file>.bak-<timestamp>` rather than clobbering it.
+lazygit, the Nerd Font, node/python/go/pipx, php/composer, terraform), clones
+`tpm`, and symlinks every config file into place — backing up anything
+already there as `<file>.bak-<timestamp>` rather than clobbering it. Because
+it's a symlink back into this cloned repo, editing a file here takes effect
+immediately, in every clone/install, with no re-run or re-copy step.
 
 ### After install.sh finishes
 

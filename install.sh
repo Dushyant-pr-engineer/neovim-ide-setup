@@ -9,6 +9,10 @@
 #
 # Safe to re-run: existing config files are backed up with a .bak-<timestamp>
 # suffix rather than silently overwritten.
+#
+# Config is deployed via symlinks back into this repo (not copies), so
+# editing a file here takes effect immediately — no re-run needed to pick up
+# changes. Also means: don't move or delete this cloned repo directory.
 
 set -euo pipefail
 
@@ -20,28 +24,35 @@ fi
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 STAMP="$(date +%Y%m%d%H%M%S)"
 
-backup_and_copy() {
+backup_and_symlink() {
     local src="$1" dest="$2"
     mkdir -p "$(dirname "$dest")"
-    if [[ -e "$dest" || -L "$dest" ]]; then
+    if [[ -L "$dest" ]]; then
+        if [[ "$(readlink "$dest")" == "$src" ]]; then
+            echo "$dest already symlinked to $src, skipping"
+            return
+        fi
+        echo "Removing existing symlink $dest -> $(readlink "$dest")"
+        rm "$dest"
+    elif [[ -e "$dest" ]]; then
         echo "Backing up existing $dest -> ${dest}.bak-${STAMP}"
         mv "$dest" "${dest}.bak-${STAMP}"
     fi
-    cp -R "$src" "$dest"
-    echo "Installed $dest"
+    ln -s "$src" "$dest"
+    echo "Symlinked $dest -> $src"
 }
 
 echo "== Step 1: Terminal =="
 if [[ "$TERMINAL" == "ghostty" ]]; then
     brew install --cask ghostty
-    backup_and_copy "$SCRIPT_DIR/ghostty/config" "$HOME/.config/ghostty/config"
+    backup_and_symlink "$SCRIPT_DIR/ghostty/config" "$HOME/.config/ghostty/config"
 else
     brew install --cask alacritty
-    backup_and_copy "$SCRIPT_DIR/alacritty/alacritty.toml" "$HOME/.config/alacritty/alacritty.toml"
+    backup_and_symlink "$SCRIPT_DIR/alacritty/alacritty.toml" "$HOME/.config/alacritty/alacritty.toml"
 fi
 
 echo "== Step 2: Dependencies (Apple Silicon) =="
-brew install neovim tmux ripgrep fzf coreutils
+brew install neovim tmux ripgrep fzf coreutils lazygit
 brew install --cask font-jetbrains-mono-nerd-font
 brew install node python go pipx
 brew install php composer
@@ -59,8 +70,8 @@ ZSH_CUSTOM_DIR="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"
 if [[ ! -d "$HOME/.oh-my-zsh" ]]; then
     echo "Oh-My-Zsh not found at ~/.oh-my-zsh — install it first (https://ohmyz.sh), then re-run this script."
 else
-    backup_and_copy "$SCRIPT_DIR/zsh/aliases.zsh" "$ZSH_CUSTOM_DIR/aliases.zsh"
-    backup_and_copy "$SCRIPT_DIR/zsh/exports.zsh" "$ZSH_CUSTOM_DIR/exports.zsh"
+    backup_and_symlink "$SCRIPT_DIR/zsh/aliases.zsh" "$ZSH_CUSTOM_DIR/aliases.zsh"
+    backup_and_symlink "$SCRIPT_DIR/zsh/exports.zsh" "$ZSH_CUSTOM_DIR/exports.zsh"
 
     # tmux-autostart.zsh is NOT a $ZSH_CUSTOM file: oh-my-zsh.sh (and thus
     # $ZSH_CUSTOM) is sourced after Powerlevel10k's instant-prompt block has
@@ -85,10 +96,10 @@ else
 fi
 
 echo "== Step 4: Tmux =="
-backup_and_copy "$SCRIPT_DIR/tmux/tmux.conf" "$HOME/.tmux.conf"
+backup_and_symlink "$SCRIPT_DIR/tmux/tmux.conf" "$HOME/.tmux.conf"
 
 echo "== Step 5: Neovim =="
-backup_and_copy "$SCRIPT_DIR/nvim" "$HOME/.config/nvim"
+backup_and_symlink "$SCRIPT_DIR/nvim" "$HOME/.config/nvim"
 
 cat <<'EOF'
 

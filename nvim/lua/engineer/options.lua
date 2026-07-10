@@ -19,6 +19,12 @@ vim.opt.termguicolors = true
 vim.opt.scrolloff = 8
 vim.opt.signcolumn = "yes" -- prevents text jump when diagnostics/gitsigns appear
 
+-- Treesitter foldexpr (set up in plugins/treesitter.lua) folds every
+-- class/function body; without this, Neovim's default foldlevel=0 closes
+-- all of them on open, making large files look truncated.
+vim.opt.foldlevel = 99
+vim.opt.foldlevelstart = 99
+
 -- Pick up file changes made outside Neovim (e.g. by Claude Code in the
 -- adjacent tmux window) without a manual reload.
 vim.o.autoread = true

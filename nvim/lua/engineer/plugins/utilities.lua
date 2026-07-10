@@ -28,9 +28,24 @@ return {
         end
     },
     {
-        -- new: inline git diff markers in the gutter + hunk navigation
+        -- Interactive branch tree / staging / rebase TUI, in a floating window.
+        "kdheepak/lazygit.nvim",
+        cmd = { "LazyGit" },
+        dependencies = { "nvim-lua/plenary.nvim" },
+        keys = {
+            { "<leader>gg", "<cmd>LazyGit<cr>", desc = "LazyGit" },
+        },
+    },
+    {
+        -- inline git diff markers in the gutter + hunk navigation + line blame
         "lewis6991/gitsigns.nvim",
-        opts = {},
+        opts = {
+            current_line_blame = true,
+            current_line_blame_opts = { delay = 300 },
+            on_attach = function(bufnr)
+                vim.keymap.set("n", "<leader>gb", require("gitsigns").toggle_current_line_blame, { buffer = bufnr })
+            end,
+        },
     },
     {
         -- new: discoverability for all the <leader> mappings above
