@@ -15,15 +15,20 @@ vim.opt.undofile = true
 
 vim.opt.hlsearch = false
 vim.opt.incsearch = true
+vim.opt.ignorecase = true -- search is case-insensitive by default...
+vim.opt.smartcase = true -- ...unless the pattern itself has an uppercase letter
 vim.opt.termguicolors = true
 vim.opt.scrolloff = 8
 vim.opt.signcolumn = "yes" -- prevents text jump when diagnostics/gitsigns appear
 
--- Treesitter foldexpr (set up in plugins/treesitter.lua) folds every
--- class/function body; without this, Neovim's default foldlevel=0 closes
--- all of them on open, making large files look truncated.
-vim.opt.foldlevel = 99
-vim.opt.foldlevelstart = 99
+-- Treesitter foldexpr (set up in plugins/treesitter.lua) assigns a fold
+-- level per nesting depth. foldlevel=0 (Neovim's default) collapses
+-- everything, including top-level class/function defs, down to a handful of
+-- lines. foldlevel=1 keeps the top level open (class/function signatures
+-- visible) while collapsing what's nested inside them (method bodies etc.)
+-- — a skimmable outline view by default, not a wall of squashed text.
+vim.opt.foldlevel = 1
+vim.opt.foldlevelstart = 1
 
 -- Pick up file changes made outside Neovim (e.g. by Claude Code in the
 -- adjacent tmux window) without a manual reload.

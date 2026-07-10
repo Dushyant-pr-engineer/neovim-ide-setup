@@ -95,7 +95,7 @@ Leader key is `<Space>`.
 | `%` | Jump to matching bracket |
 | `*` / `#` | Search word under cursor forward / backward |
 | `f{char}` / `t{char}` | Jump to / till next char on line |
-| `` `` ` `` mark `` / `'`mark | Jump to exact / line position of a mark |
+| `` `mark `` / `'mark` | Jump to exact / line position of a mark |
 
 ### Editing
 
@@ -124,6 +124,8 @@ Leader key is `<Space>`.
 | `n` / `N` | Next / previous match |
 | `:%s/old/new/g` | Replace all in file |
 | `:%s/old/new/gc` | Replace all, confirm each |
+| — | Search is case-insensitive by default; typing any uppercase letter in the pattern makes it case-sensitive again (`ignorecase`+`smartcase`) |
+| `/pattern\c` / `/pattern\C` | Force a single search to be case-insensitive / case-sensitive, overriding the above |
 
 ### Folding (treesitter-based)
 
