@@ -97,6 +97,23 @@ Leader key is `<Space>`.
 | `f{char}` / `t{char}` | Jump to / till next char on line |
 | `` `mark `` / `'mark` | Jump to exact / line position of a mark |
 
+### Select whole file (`ggVG` and combos)
+
+`gg` jumps to the top, `V` starts linewise visual select, `G` extends it to the bottom — chain on an operator/register to act on the whole file in one go.
+
+| Key | Action |
+|---|---|
+| `ggVG` | Select the entire file (linewise visual) |
+| `ggVGy` | Select whole file and yank (unnamed register) |
+| `ggVGd` | Select whole file and delete |
+| `ggVGc` | Select whole file and change (delete + enter Insert) |
+| `ggVG=` | Select whole file and re-indent |
+| `ggVG>` / `ggVG<` | Select whole file and indent / outdent once |
+| `ggVGJ` | Select whole file and join into one line |
+| `ggVG"+y` | Select whole file and yank to system clipboard |
+| `Cmd-a` | Same as `ggVG"+y` (custom remap; needs `keybind = cmd+a=unbind` in Ghostty config so it reaches Neovim) |
+| `ggyG` | Equivalent to `ggVGy` without visual mode (yank from cursor's start-of-file to end-of-file) |
+
 ### Editing
 
 | Key | Action |
