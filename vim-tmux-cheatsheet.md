@@ -2,6 +2,11 @@
 
 Tailored to the config in `neovim-ide-setup/` — leader is `<Space>`, tmux prefix is `Ctrl-a`.
 
+> **macOS Option key:** shortcuts written `Alt-…` fire on the **left** Option key
+> (Ghostty `macos-option-as-alt = left` / Alacritty `option_as_alt = "OnlyLeft"`).
+> The right Option key still types accented characters (`é`, `–`, …), so it won't
+> trigger these bindings.
+
 ## Tmux
 
 ### Sessions
@@ -22,7 +27,7 @@ Tailored to the config in `neovim-ide-setup/` — leader is `<Space>`, tmux pref
 | `prefix c` | New window |
 | `prefix ,` | Rename window |
 | `prefix n` / `prefix p` | Next / previous window |
-| `prefix 0-9` | Jump to window number |
+| `prefix 1-9` | Jump to window number (windows are numbered from 1 — `base-index 1` — so `prefix 0` does nothing unless you have 10+ windows open) |
 | `prefix w` | Window list (interactive) |
 | `prefix &` | Kill window |
 
@@ -38,6 +43,7 @@ Tailored to the config in `neovim-ide-setup/` — leader is `<Space>`, tmux pref
 | `prefix {` / `prefix }` | Swap pane left / right |
 | `prefix Ctrl-arrow` | Resize pane |
 | `prefix q` | Show pane numbers |
+| `Alt-1` ... `Alt-5` | Jump directly to pane N (matches the number shown by `prefix q`) |
 
 ### Copy mode (vi-style, since `mode-keys vi` is set)
 
@@ -168,9 +174,11 @@ Folds start fully open (`foldlevel`/`foldlevelstart = 99`) — these are for whe
 | `:bn` / `:bp` | Next / previous buffer |
 | `:bd` / `<leader>bd` | Close buffer |
 | `Ctrl-w s` / `Ctrl-w v` | Split window horizontally / vertically |
-| `Alt-1` ... `Alt-9` | Jump directly to buffer tab N (bufferline) |
+| `<leader>b1` ... `<leader>b9` | Jump directly to buffer tab N (bufferline) |
 | `Alt-,` / `Alt-.` | Previous / next buffer tab (bufferline) |
 | `Ctrl-o` / `Ctrl-i` | Jump back / forward in jumplist — **the fast way back** after `gd` jumps you to another file |
+
+`<leader>b1`–`b9` follow the **visible tab numbers** (bufferline `numbers = "ordinal"`). They're separate from Harpoon's `<leader>1`–`4` below — that's a curated 4-file list whose numbers don't track the tab bar.
 
 ### LSP (on attach — `gopls`, `pyright`, `intelephense`, `ts_ls`, `ruff`, `terraformls`, etc.)
 
@@ -215,7 +223,7 @@ Statusline (lualine) shows the current branch name at the bottom at all times �
 |---|---|
 | `<leader>a` | Add current file to Harpoon |
 | `Ctrl-e` | Toggle Harpoon quick menu |
-| `<leader>1` / `2` / `3` / `4` | Jump to Harpoon file 1-4 (remapped off `Ctrl-h/j/k/l` to avoid clashing with tmux-navigator) |
+| `<leader>1` / `2` / `3` / `4` | Jump to Harpoon file 1-4 — a curated list, distinct from bufferline's `<leader>b1`–`b9` tab jump (remapped off `Ctrl-h/j/k/l` to avoid clashing with tmux-navigator) |
 
 ### Testing (neotest + neotest-phpunit)
 

@@ -7,8 +7,7 @@ font-thicken = true
 window-padding-x = 12
 window-padding-y = 12
 window-padding-balance = true
-background-opacity = 0.92
-background-blur = 20
+background-opacity = 1
 unfocused-split-opacity = 0.6
 
 # macOS
@@ -18,6 +17,10 @@ window-save-state = always
 
 # Theme (Tokyo Night to match the Neovim colorscheme)
 theme = "TokyoNight Storm"
+
+# Pure black window background — solid, no transparency. Set AFTER `theme`
+# so it overrides TokyoNight Storm's own (dark blue) background.
+background = #000000
 
 # Cursor / mouse
 cursor-style = block

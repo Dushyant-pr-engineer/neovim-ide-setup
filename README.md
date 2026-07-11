@@ -11,10 +11,10 @@ neovim-ide-setup/
 ├── ghostty/config           -> ~/.config/ghostty/config
 ├── alacritty/alacritty.toml -> ~/.config/alacritty/alacritty.toml (alternative)
 ├── tmux/tmux.conf           -> ~/.tmux.conf
+├── tmux/policyr-session.sh   # `policyr` alias — recreates + attaches the session
 ├── zsh/
-│   ├── aliases.zsh          -> $ZSH_CUSTOM/aliases.zsh
-│   ├── exports.zsh          -> $ZSH_CUSTOM/exports.zsh
-│   └── tmux-autostart.zsh   -> prepended to the top of ~/.zshrc
+│   ├── aliases.zsh          -> $ZSH_CUSTOM/aliases.zsh  (incl. dev/policyr tmux aliases)
+│   └── exports.zsh          -> $ZSH_CUSTOM/exports.zsh
 └── nvim/                    -> ~/.config/nvim/
     ├── init.lua
     └── lua/engineer/
@@ -87,19 +87,14 @@ immediately, in every clone/install, with no re-run or re-copy step.
   `FocusGained,BufEnter -> checktime` autocommand added to `options.lua`,
   per Step 12's note about picking up file changes made by Claude Code in
   the adjacent tmux window.
-- **Zsh tmux auto-attach**: shipped as Option A (a plain auto-attach
-  snippet) since it doesn't carry the "can interact oddly with oh-my-tmux"
-  caveat the plan raises about Option B (the Oh-My-Zsh `tmux` plugin). It's
-  prepended directly to the top of `~/.zshrc` — *above* Powerlevel10k's
-  instant-prompt block — rather than installed as a `$ZSH_CUSTOM` file,
-  because `$ZSH_CUSTOM` is sourced by `oh-my-zsh.sh` only after instant-prompt
-  has already started buffering console output, and tmux needs to take over
-  the tty directly to attach/create a session. Running it that late causes
-  `open terminal failed: not a terminal`. `install.sh` guards the insert with
-  a marker comment so re-running it doesn't duplicate the block. To switch to
-  Option B instead, remove the marked block from `~/.zshrc`, add `tmux` to the
-  `plugins=(...)` array, and add the three `ZSH_TMUX_*` exports from the plan
-  to `exports.zsh`.
+- **Manual tmux attach**: the terminal no longer auto-attaches to tmux on
+  launch. Attach with the `policyr` alias in `zsh/aliases.zsh`, which attaches
+  to the saved PolicyR session — recreating its layout (nvim top-left, a shell
+  bottom-left, Claude Code in the narrow right column) via
+  `tmux/policyr-session.sh` if it isn't already running.
+
+  Earlier versions prepended an auto-attach block to the top of `~/.zshrc`;
+  re-running `install.sh` now strips that block (after backing up `~/.zshrc`).
 - **intelephense license**: left commented out in `lsp_settings.lua` — free
   tier works for hover/completion/diagnostics; uncomment and point at
   `~/intelephense/licence.txt` if you buy the paid license later for
@@ -110,5 +105,7 @@ immediately, in every clone/install, with no re-run or re-copy step.
 Both configs are included. Ghostty is the plan's primary recommendation
 (native macOS rendering, ligatures, Shift+Enter for Claude Code out of the
 box). Alacritty remains fully supported — `install.sh --alacritty` installs
-it instead and applies the Shift+Enter keybinding the plan calls out as the
-one thing Alacritty needs that Ghostty doesn't.
+it instead and applies the two macOS tweaks Ghostty handles natively: the
+Shift+Enter keybinding for Claude Code, and `option_as_alt = "OnlyLeft"` so
+Alt-based keys (tmux `Alt+1`–`5` pane-nav, Neovim `Alt-,`/`Alt-.` buffer
+cycle) reach the app instead of typing accented characters.

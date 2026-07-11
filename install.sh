@@ -4,8 +4,9 @@
 #
 # Usage:
 #   chmod +x install.sh
-#   ./install.sh              # Ghostty (recommended)
-#   ./install.sh --alacritty  # keep Alacritty instead of Ghostty
+#   ./install.sh              # prompts to choose a terminal (Ghostty/Alacritty)
+#   ./install.sh --ghostty    # skip the prompt, use Ghostty (recommended)
+#   ./install.sh --alacritty  # skip the prompt, use Alacritty
 #
 # Safe to re-run: existing config files are backed up with a .bak-<timestamp>
 # suffix rather than silently overwritten.
@@ -16,10 +17,27 @@
 
 set -euo pipefail
 
-TERMINAL="ghostty"
-if [[ "${1:-}" == "--alacritty" ]]; then
-    TERMINAL="alacritty"
+TERMINAL=""
+case "${1:-}" in
+    --ghostty)   TERMINAL="ghostty" ;;
+    --alacritty) TERMINAL="alacritty" ;;
+esac
+
+# No flag given — prompt interactively for the terminal app.
+if [[ -z "$TERMINAL" ]]; then
+    echo "Which terminal app do you want to install and configure?"
+    echo "  1) Ghostty (recommended)"
+    echo "  2) Alacritty"
+    while [[ -z "$TERMINAL" ]]; do
+        read -rp "Enter choice [1]: " choice
+        case "${choice:-1}" in
+            1) TERMINAL="ghostty" ;;
+            2) TERMINAL="alacritty" ;;
+            *) echo "Please enter 1 or 2." ;;
+        esac
+    done
 fi
+echo "Selected terminal: $TERMINAL"
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 STAMP="$(date +%Y%m%d%H%M%S)"
@@ -73,25 +91,20 @@ else
     backup_and_symlink "$SCRIPT_DIR/zsh/aliases.zsh" "$ZSH_CUSTOM_DIR/aliases.zsh"
     backup_and_symlink "$SCRIPT_DIR/zsh/exports.zsh" "$ZSH_CUSTOM_DIR/exports.zsh"
 
-    # tmux-autostart.zsh is NOT a $ZSH_CUSTOM file: oh-my-zsh.sh (and thus
-    # $ZSH_CUSTOM) is sourced after Powerlevel10k's instant-prompt block has
-    # already started, and tmux needs to take over the tty before that block
-    # runs (see the comment inside zsh/tmux-autostart.zsh). So it gets
-    # prepended directly to the top of ~/.zshrc instead, guarded by a marker
-    # so re-running this script doesn't duplicate it.
-    TMUX_MARKER="# >>> neovim-ide-setup tmux auto-attach >>>"
-    if [[ -f "$HOME/.zshrc" ]] && grep -qF "$TMUX_MARKER" "$HOME/.zshrc"; then
-        echo "tmux auto-attach already present in ~/.zshrc, skipping"
-    else
-        echo "Backing up ~/.zshrc -> ~/.zshrc.bak-${STAMP} (if it exists)"
-        [[ -f "$HOME/.zshrc" ]] && cp "$HOME/.zshrc" "$HOME/.zshrc.bak-${STAMP}"
-        {
-            cat "$SCRIPT_DIR/zsh/tmux-autostart.zsh"
-            echo
-            [[ -f "$HOME/.zshrc" ]] && cat "$HOME/.zshrc"
-        } >"$HOME/.zshrc.new"
-        mv "$HOME/.zshrc.new" "$HOME/.zshrc"
-        echo "Prepended tmux auto-attach to the top of ~/.zshrc"
+    # tmux is now attached manually via the `dev` / `policyr` aliases in
+    # zsh/aliases.zsh (see below) — the terminal no longer auto-attaches on
+    # launch. Strip any auto-attach block left in ~/.zshrc by earlier runs.
+    TMUX_OPEN="# >>> neovim-ide-setup tmux auto-attach >>>"
+    TMUX_CLOSE="# <<< neovim-ide-setup tmux auto-attach <<<"
+    if [[ -f "$HOME/.zshrc" ]] && grep -qF "$TMUX_OPEN" "$HOME/.zshrc"; then
+        echo "Backing up ~/.zshrc -> ~/.zshrc.bak-${STAMP}"
+        cp "$HOME/.zshrc" "$HOME/.zshrc.bak-${STAMP}"
+        awk -v o="$TMUX_OPEN" -v c="$TMUX_CLOSE" '
+            $0==o {skip=1}
+            !skip {print}
+            $0==c {skip=0}
+        ' "$HOME/.zshrc.bak-${STAMP}" >"$HOME/.zshrc"
+        echo "Removed tmux auto-attach block from ~/.zshrc (now manual)"
     fi
 fi
 
@@ -106,8 +119,8 @@ cat <<'EOF'
 Install complete. Remaining manual steps:
 
 1. Open a new terminal tab (or `omz reload`) to pick up the Zsh changes.
-2. Start tmux (`tmux new -s dev` or just open a new terminal — auto-attach
-   is wired up) and press `prefix + I` (Ctrl-a then I) to install tmux
+2. Attach to tmux manually with the `policyr` alias (recreates the saved
+   PolicyR layout), then press `prefix + I` (Ctrl-a then I) to install tmux
    plugins via TPM.
 3. Launch `nvim` — lazy.nvim bootstraps itself and installs all plugins on
    first run.

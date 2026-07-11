@@ -11,6 +11,11 @@ family = "JetBrainsMono Nerd Font"
 [window]
 padding = { x = 12, y = 12 }
 opacity = 0.92
+# macOS: make the LEFT Option key send Alt/Meta so Alt-based keys reach the
+# app inside tmux (tmux Alt+1..5 pane-nav, Neovim Alt-,/Alt-. buffer cycle).
+# Left-only keeps the right Option free for typing accented characters —
+# matches Ghostty's `macos-option-as-alt = left`.
+option_as_alt = "OnlyLeft"
 
 [colors.primary]
 background = "#1a1b26"
