@@ -1,0 +1,32 @@
+# Template for ~/.zshrc.local — copy to ~/.zshrc.local and fill in.
+# install.sh copies this to ~/.zshrc.local automatically if that file is absent.
+#
+# This file is sourced at the END of the repo-managed ~/.zshrc, after oh-my-zsh
+# loads. Put real secrets and machine-specific config ONLY here — it lives in
+# your home directory and is NEVER committed to git.
+
+# --- Secrets -----------------------------------------------------------------
+# export CONTEXT7_API_KEY="<your-context7-key>"
+
+# PolicyR API test credentials (consumed by apiTestingAlias.zsh functions)
+# export PR_USERNAME="..."
+# export PR_PASSWORD="..."
+
+# --- php build flags (adjust version to what you have installed) --------------
+# export LDFLAGS="-L/opt/homebrew/opt/php@8.5/lib"
+# export CPPFLAGS="-I/opt/homebrew/opt/php@8.5/include"
+
+# --- PATH (machine-specific) --------------------------------------------------
+# export PATH="/opt/homebrew/bin:$PATH"
+# export PATH="$HOME/go/bin:$PATH"
+# export PATH="$HOME/.local/bin:$PATH"
+
+# --- NVM ----------------------------------------------------------------------
+# export NVM_DIR="$HOME/.nvm"
+# [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"
+# [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"
+
+# --- Docker CLI completions ---------------------------------------------------
+# fpath=($HOME/.docker/completions $fpath)
+# autoload -Uz compinit
+# compinit

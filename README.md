@@ -12,9 +12,16 @@ neovim-ide-setup/
 ├── alacritty/alacritty.toml -> ~/.config/alacritty/alacritty.toml (alternative)
 ├── tmux/tmux.conf           -> ~/.tmux.conf
 ├── tmux/policyr-session.sh   # `policyr` alias — recreates + attaches the session
-├── zsh/
-│   ├── aliases.zsh          -> $ZSH_CUSTOM/aliases.zsh  (incl. dev/policyr tmux aliases)
-│   └── exports.zsh          -> $ZSH_CUSTOM/exports.zsh
+├── zsh/                     # Oh-My-Zsh + Powerlevel10k, symlinked into place
+│   ├── zshrc                -> ~/.zshrc               (theme + plugins array)
+│   ├── p10k.zsh             -> ~/.p10k.zsh            (Powerlevel10k config)
+│   ├── plugins.txt          # third-party plugins cloned into $ZSH_CUSTOM/plugins
+│   ├── zshrc.local.example  # copied to ~/.zshrc.local (secrets/machine config; git-ignored)
+│   ├── aliases.zsh          -> $ZSH_CUSTOM/aliases.zsh  (nvim + policyr tmux aliases)
+│   ├── exports.zsh          -> $ZSH_CUSTOM/exports.zsh
+│   ├── devAlias.zsh         -> $ZSH_CUSTOM/devAlias.zsh
+│   ├── generalAlias.zsh     -> $ZSH_CUSTOM/generalAlias.zsh
+│   └── apiTestingAlias.zsh  -> $ZSH_CUSTOM/apiTestingAlias.zsh
 └── nvim/                    -> ~/.config/nvim/
     ├── init.lua
     └── lua/engineer/
@@ -54,8 +61,18 @@ already there as `<file>.bak-<timestamp>` rather than clobbering it. Because
 it's a symlink back into this cloned repo, editing a file here takes effect
 immediately, in every clone/install, with no re-run or re-copy step.
 
+For Zsh it's a full bootstrap: it installs Oh-My-Zsh (unattended) and clones
+Powerlevel10k + the plugins in `zsh/plugins.txt` if they're missing, then
+symlinks `zsh/zshrc → ~/.zshrc`, `zsh/p10k.zsh → ~/.p10k.zsh`, and every
+`zsh/*.zsh` snippet into `$ZSH_CUSTOM`. It leaves your login shell alone
+(`chsh -s $(which zsh)` yourself on a brand-new machine if zsh isn't already
+the default).
+
 ### After install.sh finishes
 
+1. Fill in `~/.zshrc.local` with your secrets and machine-specific config
+   (API keys, `PATH`, php flags, NVM, ...). On an upgrade, copy them out of the
+   `~/.zshrc.bak-<timestamp>` backup this run created. See "Zsh" below.
 1. Open a new terminal tab (or `omz reload`).
 2. Inside tmux, press `prefix + I` (`Ctrl-a` then `I`) to install tmux
    plugins via TPM (tmux-sensible, resurrect, continuum, yank,
@@ -67,6 +84,47 @@ immediately, in every clone/install, with no re-run or re-copy step.
    yamlls, jsonls, lua_ls) attach.
 5. In a tmux pane, run `claude` and confirm Shift+Enter inserts a newline
    (not submit) and that desktop notifications arrive.
+
+## Zsh (Oh-My-Zsh + Powerlevel10k)
+
+`~/.zshrc` and `~/.p10k.zsh` are symlinks to `zsh/zshrc` and `zsh/p10k.zsh` in
+this repo, so shell config is versioned and shared across machines — edit the
+repo copy and open a new tab (or `omz reload`). Everything the shell loads comes
+from three places:
+
+- **`zsh/zshrc`** — the theme selection and the `plugins=(...)` array.
+- **`zsh/*.zsh` snippets** — symlinked into `$ZSH_CUSTOM` and auto-sourced by
+  Oh-My-Zsh (`aliases.zsh`, `exports.zsh`, `devAlias.zsh`, `generalAlias.zsh`,
+  `apiTestingAlias.zsh`). Good for aliases/functions/exports.
+- **`~/.zshrc.local`** — secrets + machine-specific config, sourced last.
+
+### Secrets & machine-specific config
+
+Anything secret (API keys, passwords) or machine-specific (`PATH`, php build
+flags, NVM, Docker completions) lives in `~/.zshrc.local`, which stays in your
+home directory and is **never committed**. `install.sh` seeds it from
+`zsh/zshrc.local.example` on a fresh machine. Never put a real secret in a
+tracked `zsh/*.zsh` file — e.g. `apiTestingAlias.zsh` reads `PR_USERNAME` /
+`PR_PASSWORD` from `~/.zshrc.local` at call time rather than hardcoding them.
+
+### Add an alias / function
+
+Edit an existing `zsh/*.zsh` snippet (or add a new `zsh/<name>.zsh` and re-run
+`install.sh` to symlink it into `$ZSH_CUSTOM`). It's live in the next new shell.
+
+### Enable a plugin
+
+1. If it's a third-party plugin, add a `name url` line to `zsh/plugins.txt`
+   (re-running `install.sh` clones it into `$ZSH_CUSTOM/plugins/<name>`).
+2. Add the plugin name to the `plugins=(...)` array in `zsh/zshrc`. Keep
+   `fast-syntax-highlighting` last — it wraps ZLE and must load after the rest.
+
+### Fonts
+
+Powerlevel10k runs in `nerdfont-v3` mode, rendered by the terminals' configured
+**JetBrainsMono Nerd Font** (installed via the `font-jetbrains-mono-nerd-font`
+cask in Step 2). MesloLGS NF — p10k's own default recommendation — also works if
+you prefer it; no config change is required either way.
 
 ## Notable implementation choices (where the source plan left a decision open)
 
@@ -93,8 +151,10 @@ immediately, in every clone/install, with no re-run or re-copy step.
   bottom-left, Claude Code in the narrow right column) via
   `tmux/policyr-session.sh` if it isn't already running.
 
-  Earlier versions prepended an auto-attach block to the top of `~/.zshrc`;
-  re-running `install.sh` now strips that block (after backing up `~/.zshrc`).
+  Earlier versions prepended an auto-attach block to the top of `~/.zshrc`.
+  Now that `~/.zshrc` is a repo-managed symlink (`zsh/zshrc`), that block is
+  simply absent — the first `install.sh` run backs up your previous real
+  `~/.zshrc` to `~/.zshrc.bak-<timestamp>`.
 - **intelephense license**: left commented out in `lsp_settings.lua` — free
   tier works for hover/completion/diagnostics; uncomment and point at
   `~/intelephense/licence.txt` if you buy the paid license later for

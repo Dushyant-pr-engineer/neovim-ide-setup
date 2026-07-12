@@ -1,0 +1,6 @@
+# Third-party Oh-My-Zsh plugins to clone into $ZSH_CUSTOM/plugins.
+# Format: <name> <git-url>   (whitespace-separated; blank lines and #-comments ignored)
+# install.sh clones each missing one on every run (existing ones are skipped).
+# Remember to also add the plugin name to the plugins=(...) array in zsh/zshrc.
+zsh-autosuggestions       https://github.com/zsh-users/zsh-autosuggestions
+fast-syntax-highlighting  https://github.com/zdharma-continuum/fast-syntax-highlighting

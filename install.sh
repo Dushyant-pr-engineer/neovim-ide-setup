@@ -83,29 +83,64 @@ else
     echo "tpm already installed, skipping clone"
 fi
 
-echo "== Step 3: Zsh (Oh-My-Zsh custom dir) =="
+echo "== Step 3: Zsh (Oh-My-Zsh + Powerlevel10k) =="
 ZSH_CUSTOM_DIR="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"
-if [[ ! -d "$HOME/.oh-my-zsh" ]]; then
-    echo "Oh-My-Zsh not found at ~/.oh-my-zsh — install it first (https://ohmyz.sh), then re-run this script."
-else
-    backup_and_symlink "$SCRIPT_DIR/zsh/aliases.zsh" "$ZSH_CUSTOM_DIR/aliases.zsh"
-    backup_and_symlink "$SCRIPT_DIR/zsh/exports.zsh" "$ZSH_CUSTOM_DIR/exports.zsh"
 
-    # tmux is now attached manually via the `dev` / `policyr` aliases in
-    # zsh/aliases.zsh (see below) — the terminal no longer auto-attaches on
-    # launch. Strip any auto-attach block left in ~/.zshrc by earlier runs.
-    TMUX_OPEN="# >>> neovim-ide-setup tmux auto-attach >>>"
-    TMUX_CLOSE="# <<< neovim-ide-setup tmux auto-attach <<<"
-    if [[ -f "$HOME/.zshrc" ]] && grep -qF "$TMUX_OPEN" "$HOME/.zshrc"; then
-        echo "Backing up ~/.zshrc -> ~/.zshrc.bak-${STAMP}"
-        cp "$HOME/.zshrc" "$HOME/.zshrc.bak-${STAMP}"
-        awk -v o="$TMUX_OPEN" -v c="$TMUX_CLOSE" '
-            $0==o {skip=1}
-            !skip {print}
-            $0==c {skip=0}
-        ' "$HOME/.zshrc.bak-${STAMP}" >"$HOME/.zshrc"
-        echo "Removed tmux auto-attach block from ~/.zshrc (now manual)"
-    fi
+# 3a. Install Oh-My-Zsh if missing (unattended, leaving login shell + ~/.zshrc
+# alone — we symlink our own ~/.zshrc just below).
+if [[ ! -d "$HOME/.oh-my-zsh" ]]; then
+    echo "Installing Oh-My-Zsh (unattended)..."
+    RUNZSH=no CHSH=no KEEP_ZSHRC=yes \
+        sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+else
+    echo "Oh-My-Zsh already installed, skipping"
+fi
+
+# 3b. Install Powerlevel10k theme if missing.
+P10K_DIR="$ZSH_CUSTOM_DIR/themes/powerlevel10k"
+if [[ ! -d "$P10K_DIR" ]]; then
+    echo "Cloning Powerlevel10k..."
+    git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "$P10K_DIR"
+else
+    echo "Powerlevel10k already installed, skipping clone"
+fi
+
+# 3c. Install third-party plugins listed in zsh/plugins.txt ("name url" per line).
+if [[ -f "$SCRIPT_DIR/zsh/plugins.txt" ]]; then
+    while read -r name url _; do
+        [[ -z "$name" || "$name" == \#* ]] && continue
+        dest="$ZSH_CUSTOM_DIR/plugins/$name"
+        if [[ ! -d "$dest" ]]; then
+            echo "Cloning plugin $name..."
+            git clone --depth=1 "$url" "$dest"
+        else
+            echo "Plugin $name already installed, skipping"
+        fi
+    done < "$SCRIPT_DIR/zsh/plugins.txt"
+fi
+
+# 3d. Symlink our *.zsh snippets into $ZSH_CUSTOM (oh-my-zsh auto-sources them).
+# Skip p10k.zsh — it's linked to ~/.p10k.zsh below, not sourced from custom.
+for f in "$SCRIPT_DIR"/zsh/*.zsh; do
+    base="$(basename "$f")"
+    [[ "$base" == "p10k.zsh" ]] && continue
+    backup_and_symlink "$f" "$ZSH_CUSTOM_DIR/$base"
+done
+
+# 3e. Symlink the managed .zshrc and Powerlevel10k config into $HOME. The .zshrc
+# link backs up any existing real ~/.zshrc to ~/.zshrc.bak-<STAMP>, preserving
+# prior secrets/machine config for migration into ~/.zshrc.local.
+backup_and_symlink "$SCRIPT_DIR/zsh/zshrc" "$HOME/.zshrc"
+backup_and_symlink "$SCRIPT_DIR/zsh/p10k.zsh" "$HOME/.p10k.zsh"
+
+# 3f. Seed ~/.zshrc.local (secrets + machine-specific config) from the template
+# if it doesn't exist yet — never overwrite an existing one.
+if [[ ! -f "$HOME/.zshrc.local" ]]; then
+    cp "$SCRIPT_DIR/zsh/zshrc.local.example" "$HOME/.zshrc.local"
+    echo "Created ~/.zshrc.local from template — add your secrets/machine config there."
+    echo "  (Any previous ~/.zshrc was backed up to ~/.zshrc.bak-*; copy secrets from it.)"
+else
+    echo "~/.zshrc.local already exists, leaving it untouched"
 fi
 
 echo "== Step 4: Tmux =="
@@ -114,10 +149,38 @@ backup_and_symlink "$SCRIPT_DIR/tmux/tmux.conf" "$HOME/.tmux.conf"
 echo "== Step 5: Neovim =="
 backup_and_symlink "$SCRIPT_DIR/nvim" "$HOME/.config/nvim"
 
+echo "== Step 6: Secrets (.env) =="
+if [[ -f "$SCRIPT_DIR/.env" ]]; then
+    set -a
+    # shellcheck disable=SC1091
+    source "$SCRIPT_DIR/.env"
+    set +a
+
+    if [[ -n "${WAKATIME_API_KEY:-}" ]]; then
+        if [[ -f "$HOME/.wakatime.cfg" ]] && ! grep -q "^api_key = ${WAKATIME_API_KEY}$" "$HOME/.wakatime.cfg"; then
+            echo "Backing up existing ~/.wakatime.cfg -> ~/.wakatime.cfg.bak-${STAMP}"
+            cp "$HOME/.wakatime.cfg" "$HOME/.wakatime.cfg.bak-${STAMP}"
+        fi
+        cat >"$HOME/.wakatime.cfg" <<EOF
+[settings]
+api_key = ${WAKATIME_API_KEY}
+EOF
+        echo "Wrote WAKATIME_API_KEY to ~/.wakatime.cfg"
+    else
+        echo "WAKATIME_API_KEY not set in .env, skipping ~/.wakatime.cfg"
+    fi
+else
+    echo "No .env file found at $SCRIPT_DIR/.env, skipping secrets setup."
+    echo "  Copy .env.example to .env and fill in your keys (e.g. WAKATIME_API_KEY) to enable this step."
+fi
+
 cat <<'EOF'
 
 Install complete. Remaining manual steps:
 
+0. Fill in ~/.zshrc.local with your secrets + machine-specific config
+   (API keys, PATH, php flags, NVM, ...). On an upgrade, copy them from the
+   ~/.zshrc.bak-* backup this run created. This file is never committed.
 1. Open a new terminal tab (or `omz reload`) to pick up the Zsh changes.
 2. Attach to tmux manually with the `policyr` alias (recreates the saved
    PolicyR layout), then press `prefix + I` (Ctrl-a then I) to install tmux

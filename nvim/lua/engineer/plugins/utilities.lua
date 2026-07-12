@@ -1,9 +1,13 @@
 return {
     {
         "ThePrimeagen/harpoon",
+        dependencies = { "nvim-lua/plenary.nvim" },
         config = function()
+            require("harpoon").setup({})
+
             local mark = require("harpoon.mark")
             local ui = require("harpoon.ui")
+
             vim.keymap.set("n", "<leader>a", mark.add_file)
             vim.keymap.set("n", "<C-e>", ui.toggle_quick_menu)
             -- Remapped off <C-h/j/k/l> (originally Harpoon's file-nav keys) to
@@ -13,6 +17,9 @@ return {
             vim.keymap.set("n", "<leader>2", function() ui.nav_file(2) end)
             vim.keymap.set("n", "<leader>3", function() ui.nav_file(3) end)
             vim.keymap.set("n", "<leader>4", function() ui.nav_file(4) end)
+
+            vim.keymap.set("n", "<C-S-P>", ui.nav_prev)
+            vim.keymap.set("n", "<C-S-N>", ui.nav_next)
         end
     },
     {
@@ -64,6 +71,10 @@ return {
         -- is installed via TPM, see tmux/tmux.conf). Once loaded, it supplies
         -- its own <C-h/j/k/l> mappings automatically — no extra remap needed.
         "christoomey/vim-tmux-navigator",
+        lazy = false,
+    },
+    {
+        "wakatime/vim-wakatime",
         lazy = false,
     },
 }

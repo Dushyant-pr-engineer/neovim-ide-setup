@@ -1,0 +1,47 @@
+# Managed by neovim-ide-setup — symlinked to ~/.zshrc by install.sh.
+# Edit this file in the repo; changes take effect in every clone/machine.
+# Secrets and machine-specific config (API keys, PATH, php flags, NVM, docker
+# completions, ...) live in ~/.zshrc.local (git-ignored), sourced at the end.
+
+# Enable Powerlevel10k instant prompt only when not using Cursor Agent.
+# Should stay close to the top of ~/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if [[ -z "$CURSOR_AGENT" && -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
+# Path to your Oh My Zsh installation.
+export ZSH="$HOME/.oh-my-zsh"
+
+# Theme: minimal under Cursor Agent, Powerlevel10k otherwise.
+# To customize the prompt, run `p10k configure` or edit zsh/p10k.zsh in the repo.
+if [[ -n "$CURSOR_AGENT" ]]; then
+  ZSH_THEME="minimal"
+  # Skip theme initialization for better compatibility
+else
+  ZSH_THEME="powerlevel10k/powerlevel10k"
+  [[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
+fi
+
+# Which plugins to load. Stock plugins live in $ZSH/plugins; third-party ones
+# are cloned into $ZSH_CUSTOM/plugins by install.sh from zsh/plugins.txt.
+# To enable another plugin: add it to zsh/plugins.txt (if third-party) AND to
+# this array. fast-syntax-highlighting must stay LAST (it wraps ZLE).
+plugins=(
+  git
+  bundler
+  dotenv
+  macos
+  rake
+  rbenv
+  ruby
+  colorize
+  zsh-autosuggestions
+  fast-syntax-highlighting
+)
+
+source $ZSH/oh-my-zsh.sh
+
+# Machine-specific config and secrets (PATH, NVM, php flags, API keys, ...).
+[[ -f ~/.zshrc.local ]] && source ~/.zshrc.local
