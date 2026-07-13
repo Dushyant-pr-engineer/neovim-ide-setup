@@ -37,6 +37,7 @@ plugins=(
   colorize
   zsh-autosuggestions
   fast-syntax-highlighting
+  docker
 )
 
 # Project secrets sourced from ~/.env (symlinked to .env by install.sh).
@@ -47,3 +48,8 @@ source $ZSH/oh-my-zsh.sh
 
 # Machine-specific config and secrets (PATH, NVM, php flags, API keys, ...).
 [[ -f ~/.zshrc.local ]] && source ~/.zshrc.local
+# The following lines have been added by Docker Desktop to enable Docker CLI completions.
+fpath=(/Users/dushyant.patel/.docker/completions $fpath)
+autoload -Uz compinit
+compinit
+# End of Docker CLI completions

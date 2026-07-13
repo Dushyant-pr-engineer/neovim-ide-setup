@@ -21,6 +21,7 @@ vim.opt.termguicolors = true
 vim.opt.scrolloff = 8
 vim.opt.signcolumn = "yes" -- prevents text jump when diagnostics/gitsigns appear
 vim.opt.updatetime = 300 -- faster CursorHold for diagnostic hover (ms)
+vim.opt.clipboard = "unnamedplus" -- use system clipboard for yank/paste
 
 -- Treesitter foldexpr (set up in plugins/treesitter.lua) assigns a fold
 -- level per nesting depth. foldlevel=0 (Neovim's default) collapses
