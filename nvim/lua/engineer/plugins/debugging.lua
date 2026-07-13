@@ -79,28 +79,6 @@ return {
         },
       }
 
-      -- JavaScript/TypeScript Configuration (requires node --inspect)
-      dap.adapters.node = {
-        type = "server",
-        host = "127.0.0.1",
-        port = 9229,
-      }
-
-      local js_config = {
-        {
-          type = "node",
-          request = "attach",
-          name = "Attach to Node.js (port 9229)",
-          port = 9229,
-          protocol = "inspector",
-        },
-      }
-
-      dap.configurations.javascript = js_config
-      -- TypeScript uses the same configuration as JavaScript
-      dap.configurations.typescript = js_config
-      dap.configurations.typescriptreact = js_config
-      dap.configurations.javascriptreact = js_config
 
       -- Debug keybindings (Mac-friendly)
       local opts = { noremap = true, silent = true }

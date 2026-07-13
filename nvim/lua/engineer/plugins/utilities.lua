@@ -47,6 +47,18 @@ return {
         -- inline git diff markers in the gutter + hunk navigation + line blame
         "lewis6991/gitsigns.nvim",
         opts = {
+            signs = {
+                add = { text = "+", hl = "GitSignsAdd" },
+                change = { text = "m", hl = "GitSignsChange" },
+                delete = { text = "-", hl = "GitSignsDelete" },
+                topdelete = { text = "-", hl = "GitSignsDelete" },
+                changedelete = { text = "~", hl = "GitSignsChange" },
+                untracked = { text = "?", hl = "GitSignsUntracked" },
+            },
+            signcolumn = true,
+            numhl = false,
+            linehl = false,
+            word_diff = false,
             current_line_blame = true,
             current_line_blame_opts = { delay = 300 },
             on_attach = function(bufnr)

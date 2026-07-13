@@ -1,6 +1,19 @@
 return {
     {
-        "neovim/nvim-lspconfig", -- now just supplies default per-server configs, no .setup{} calls
+        "neovim/nvim-lspconfig",
+        config = function()
+            vim.diagnostic.config({
+                virtual_text = false,
+                float = { border = "rounded" },
+            })
+
+            vim.api.nvim_create_autocmd("CursorHold", {
+                group = vim.api.nvim_create_augroup("show_diagnostic", { clear = true }),
+                callback = function()
+                    vim.diagnostic.open_float({ focus = false })
+                end,
+            })
+        end,
     },
     {
         "mason-org/mason.nvim",
