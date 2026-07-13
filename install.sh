@@ -133,11 +133,18 @@ done
 backup_and_symlink "$SCRIPT_DIR/zsh/zshrc" "$HOME/.zshrc"
 backup_and_symlink "$SCRIPT_DIR/zsh/p10k.zsh" "$HOME/.p10k.zsh"
 
-# 3f. Seed ~/.zshrc.local (secrets + machine-specific config) from the template
-# if it doesn't exist yet — never overwrite an existing one.
+# 3f. Symlink project .env to ~/.env so zshrc can source project secrets in every shell.
+# This keeps secrets in one place (the repo's .env) while making them available to
+# the interactive shell. Never commit .env — it's already .gitignored.
+backup_and_symlink "$SCRIPT_DIR/.env" "$HOME/.env"
+
+# 3g. Seed ~/.zshrc.local (machine-specific config) from the template if it
+# doesn't exist yet — never overwrite an existing one. This file stays in home
+# and is NEVER committed; it's for per-machine config like PATH, NVM, docker
+# completions, php flags, and any secrets you don't want to share (test creds, etc).
 if [[ ! -f "$HOME/.zshrc.local" ]]; then
     cp "$SCRIPT_DIR/zsh/zshrc.local.example" "$HOME/.zshrc.local"
-    echo "Created ~/.zshrc.local from template — add your secrets/machine config there."
+    echo "Created ~/.zshrc.local from template — add machine-specific config there."
     echo "  (Any previous ~/.zshrc was backed up to ~/.zshrc.bak-*; copy secrets from it.)"
 else
     echo "~/.zshrc.local already exists, leaving it untouched"

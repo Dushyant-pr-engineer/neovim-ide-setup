@@ -34,12 +34,14 @@ plugins=(
   dotenv
   macos
   rake
-  rbenv
-  ruby
   colorize
   zsh-autosuggestions
   fast-syntax-highlighting
 )
+
+# Project secrets sourced from ~/.env (symlinked to .env by install.sh).
+# Sourced BEFORE oh-my-zsh so variables are available to .zsh files in $ZSH_CUSTOM.
+[[ -f ~/.env ]] && source ~/.env
 
 source $ZSH/oh-my-zsh.sh
 

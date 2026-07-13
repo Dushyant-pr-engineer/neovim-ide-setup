@@ -14,7 +14,7 @@
 set -euo pipefail
 
 SESSION="policyr"
-DIR="$HOME/src/ops/policyr"
+DIR="${POLICYR_PATH:-$HOME/src/ops/policyr}"
 
 if ! tmux has-session -t "$SESSION" 2>/dev/null; then
     # Left column, top pane: nvim

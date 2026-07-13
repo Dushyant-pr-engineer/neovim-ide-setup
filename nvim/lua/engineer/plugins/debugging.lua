@@ -74,6 +74,8 @@ return {
           name = "Listen for XDebug",
           port = 9003,
           pathMappings = {
+            -- Maps docker container path to host cwd. 
+            -- Update "/opt/pr/policyr" if your docker container uses a different path.
             ["/opt/pr/policyr"] = vim.fn.getcwd(),
           },
         },

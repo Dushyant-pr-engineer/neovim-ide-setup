@@ -9,7 +9,7 @@
 set -uo pipefail
 
 CONTAINER_NAME="${NEOTEST_DOCKER_CONTAINER:-policyr}"
-HOST_ROOT="${NEOTEST_DOCKER_HOST_ROOT:-/Users/dushyant.patel/src/ops/policyr}"
+HOST_ROOT="${NEOTEST_DOCKER_HOST_ROOT:-${POLICYR_PATH:-$HOME/src/ops/policyr}}"
 CONTAINER_ROOT="${NEOTEST_DOCKER_CONTAINER_ROOT:-/opt/pr/policyr}"
 
 log_junit_host=""

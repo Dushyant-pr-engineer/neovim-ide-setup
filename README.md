@@ -1,22 +1,24 @@
 # Neovim IDE Setup
 
-Implementation of `neovim-ide-setup-plan.md` for PHP, JS/TS, Go, Python,
-Markdown/Shell/YAML/JSON/Terraform, on Apple Silicon.
+Complete IDE setup for PHP, JS/TS, Go, Python, Markdown/Shell/YAML/JSON/Terraform,
+on Apple Silicon.
 
 ## Contents
 
 ```
 neovim-ide-setup/
+├── .env                    # Shared secrets (WakaTime, Context7, test creds); git-ignored
+├── .env.example            # Template for .env — copy to .env and fill in real values
 ├── install.sh              # bootstraps everything below
 ├── ghostty/config           -> ~/.config/ghostty/config
 ├── alacritty/alacritty.toml -> ~/.config/alacritty/alacritty.toml (alternative)
 ├── tmux/tmux.conf           -> ~/.tmux.conf
 ├── tmux/policyr-session.sh   # `policyr` alias — recreates + attaches the session
 ├── zsh/                     # Oh-My-Zsh + Powerlevel10k, symlinked into place
-│   ├── zshrc                -> ~/.zshrc               (theme + plugins array)
+│   ├── zshrc                -> ~/.zshrc               (theme + plugins array; sources ~/.env)
 │   ├── p10k.zsh             -> ~/.p10k.zsh            (Powerlevel10k config)
 │   ├── plugins.txt          # third-party plugins cloned into $ZSH_CUSTOM/plugins
-│   ├── zshrc.local.example  # copied to ~/.zshrc.local (secrets/machine config; git-ignored)
+│   ├── zshrc.local.example  # copied to ~/.zshrc.local (machine-specific config only; git-ignored)
 │   ├── aliases.zsh          -> $ZSH_CUSTOM/aliases.zsh  (nvim + policyr tmux aliases)
 │   ├── exports.zsh          -> $ZSH_CUSTOM/exports.zsh
 │   ├── devAlias.zsh         -> $ZSH_CUSTOM/devAlias.zsh
@@ -68,11 +70,23 @@ symlinks `zsh/zshrc → ~/.zshrc`, `zsh/p10k.zsh → ~/.p10k.zsh`, and every
 (`chsh -s $(which zsh)` yourself on a brand-new machine if zsh isn't already
 the default).
 
+### Customizing for Your Project
+
+This setup includes author-specific configurations (Policyr tmux session, project
+aliases, machine paths). If you're reusing this for your own project, see
+[**Cleanup/README.md**](Cleanup/README.md) for an automated script to strip away
+user-specific dependencies and customize for your stack.
+
 ### After install.sh finishes
 
-1. Fill in `~/.zshrc.local` with your secrets and machine-specific config
-   (API keys, `PATH`, php flags, NVM, ...). On an upgrade, copy them out of the
-   `~/.zshrc.bak-<timestamp>` backup this run created. See "Zsh" below.
+1. **Copy `.env.example` to `.env` and fill in your real secrets** (API keys,
+   test credentials). This file is `.gitignore`d and never committed. The
+   secrets are automatically sourced in every shell from `~/.env` (a symlink
+   created by `install.sh`). See "Secrets & machine-specific config" below.
+1. **Fill in `~/.zshrc.local` with machine-specific config** (`PATH`, php flags,
+   NVM, docker completions, etc.). This file is never committed. On an upgrade,
+   copy machine-specific settings from the `~/.zshrc.bak-<timestamp>` backup
+   this run created.
 1. Open a new terminal tab (or `omz reload`).
 2. Inside tmux, press `prefix + I` (`Ctrl-a` then `I`) to install tmux
    plugins via TPM (tmux-sensible, resurrect, continuum, yank,
@@ -90,22 +104,33 @@ the default).
 `~/.zshrc` and `~/.p10k.zsh` are symlinks to `zsh/zshrc` and `zsh/p10k.zsh` in
 this repo, so shell config is versioned and shared across machines — edit the
 repo copy and open a new tab (or `omz reload`). Everything the shell loads comes
-from three places:
+from four places:
 
-- **`zsh/zshrc`** — the theme selection and the `plugins=(...)` array.
+- **`zsh/zshrc`** — the theme selection, the `plugins=(...)` array, and sourcing of `~/.env`.
+- **`~/.env`** — symlinked to `.env` in the repo. Contains shared secrets
+  (API keys, test credentials). Copy `.env.example` → `.env` and fill in real values.
 - **`zsh/*.zsh` snippets** — symlinked into `$ZSH_CUSTOM` and auto-sourced by
   Oh-My-Zsh (`aliases.zsh`, `exports.zsh`, `devAlias.zsh`, `generalAlias.zsh`,
   `apiTestingAlias.zsh`). Good for aliases/functions/exports.
-- **`~/.zshrc.local`** — secrets + machine-specific config, sourced last.
+- **`~/.zshrc.local`** — machine-specific config only (PATH, php build flags, NVM,
+  Docker completions, etc.), sourced last. Stays in home, never committed.
 
 ### Secrets & machine-specific config
 
-Anything secret (API keys, passwords) or machine-specific (`PATH`, php build
-flags, NVM, Docker completions) lives in `~/.zshrc.local`, which stays in your
-home directory and is **never committed**. `install.sh` seeds it from
-`zsh/zshrc.local.example` on a fresh machine. Never put a real secret in a
-tracked `zsh/*.zsh` file — e.g. `apiTestingAlias.zsh` reads `PR_USERNAME` /
-`PR_PASSWORD` from `~/.zshrc.local` at call time rather than hardcoding them.
+**Shared secrets** (API keys, test credentials used across machines) live in
+`.env` at the project root, which is `.gitignore`d and never committed. `install.sh`
+symlinks `.env` to `~/.env`, so the secrets are automatically available in every
+shell. Examples: `WAKATIME_API_KEY`, `CONTEXT7_API_KEY`, `PR_USERNAME`, `PR_PASSWORD`.
+See `.env.example` for the template.
+
+**Machine-specific config** (things that vary per machine) lives in `~/.zshrc.local`,
+which is never committed. `install.sh` seeds it from `zsh/zshrc.local.example` on
+a fresh install. Examples: `PATH` tweaks, NVM setup, PHP build flags, Docker
+completions.
+
+This separation keeps shared secrets in version control (via `.env.example` as a
+template) while keeping machine-specific settings local — no one accidentally
+commits their custom `PATH` or NVM setup.
 
 ### Add an alias / function
 
@@ -169,3 +194,18 @@ it instead and applies the two macOS tweaks Ghostty handles natively: the
 Shift+Enter keybinding for Claude Code, and `option_as_alt = "OnlyLeft"` so
 Alt-based keys (tmux `Alt+1`–`5` pane-nav, Neovim `Alt-,`/`Alt-.` buffer
 cycle) reach the app instead of typing accented characters.
+
+## Documentation
+
+- **`Docs/project-workflow.md`** — Day-to-day usage guide: how to work with
+  Nvim + Tmux + Claude Code together. Walkthrough of actual workflows
+  (navigation, editing, debugging, committing).
+- **`Docs/debugging-setup.md`** — Debugging guide for PHP (XDebug + nvim-dap)
+  and JavaScript/TypeScript (Chrome DevTools). Includes troubleshooting and
+  per-request trigger setup.
+- **`vim-tmux-cheatsheet.md`** — Complete key reference: every keybinding in
+  Nvim, Tmux, and shell.
+- **`Cleanup/README.md`** — If reusing this setup for your own project, this
+  explains what's user-specific (Policyr tmux session, project aliases, etc.)
+  and what's generic IDE setup. Includes an automated cleanup script to strip
+  away author-specific customizations.

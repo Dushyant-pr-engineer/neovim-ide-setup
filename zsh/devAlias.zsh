@@ -1,6 +1,6 @@
 DOCKER_PATH="/opt/pr/docker"
 PHPUNIT_OPTIONS="--testdox --colors=always"
-PORTAL_PATH="/Users/dushyant.patel/src/ops/policyr/portal"
+PORTAL_PATH="${POLICYR_PATH:-$HOME/src/ops/policyr}/portal"
 
 # Run phinx commands
 alias phinx="$DOCKER_PATH/phinx.sh $@"
@@ -20,4 +20,8 @@ alias xdebug_log="docker exec -it policyr tail -f /var/log/xdebug.log"
 alias jstest="cd $PORTAL_PATH && npm run test $*"
 
 # Set default fusion auth users from DB
-alias create-fusionauth-default="/opt/pr/docker/zend.sh create-fusionauth-default --delete=1 --createusers=all --verified=1 --defaultpassword=1"
+alias create-fusionauth-default="$DOCKET_PATH/zend.sh create-fusionauth-default --delete=1 --createusers=all --verified=1 --defaultpassword=1"
+
+# Open Win book in terminal
+alias ToWinBook="cd /Users/dushyant.patel/Library/CloudStorage/OneDrive-Valeris/Career\ growth/Win\ Book"
+alias toWinBook="cd /Users/dushyant.patel/Library/CloudStorage/OneDrive-Valeris/Career\ growth/Win\ Book"
