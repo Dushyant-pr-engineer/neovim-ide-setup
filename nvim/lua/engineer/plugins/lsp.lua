@@ -14,7 +14,7 @@ return {
         opts = {
             ensure_installed = {
                 "intelephense", -- PHP
-                "ts_ls", -- JS/TS
+                -- "ts_ls", -- JS/TS (disabled: initialization issues — TODO: debug TypeScript setup)
                 "gopls", -- Go
                 "pyright", -- Python (types/completion)
                 "ruff", -- Python (fast linting + formatting, native LSP mode)

@@ -27,6 +27,24 @@ vim.lsp.config("intelephense", {
     -- },
 })
 
+vim.lsp.config("ts_ls", {
+    root_markers = { "tsconfig.json", "package.json", ".git" },
+    single_file_support = true,
+    init_options = {
+        preferences = {
+            preferGoToProjectRootForSymbolSearch = true,
+            includeCompletionsWithSnippetText = true,
+        },
+    },
+    settings = {
+        typescript = {
+            tsserver = {
+                logVerbosity = "off",
+            },
+        },
+    },
+})
+
 vim.lsp.config("gopls", {
     settings = {
         gopls = {

@@ -149,6 +149,15 @@ backup_and_symlink "$SCRIPT_DIR/tmux/tmux.conf" "$HOME/.tmux.conf"
 echo "== Step 5: Neovim =="
 backup_and_symlink "$SCRIPT_DIR/nvim" "$HOME/.config/nvim"
 
+echo "== Step 5b: PHP debug adapter (vscode-php-debug) =="
+PHP_DEBUG_DIR="$HOME/.local/share/vscode-php-debug"
+if [[ ! -d "$PHP_DEBUG_DIR" ]]; then
+    git clone https://github.com/xdebug/vscode-php-debug "$PHP_DEBUG_DIR"
+    (cd "$PHP_DEBUG_DIR" && npm install && npm run build)
+else
+    echo "vscode-php-debug already installed, skipping"
+fi
+
 echo "== Step 6: Secrets (.env) =="
 if [[ -f "$SCRIPT_DIR/.env" ]]; then
     set -a

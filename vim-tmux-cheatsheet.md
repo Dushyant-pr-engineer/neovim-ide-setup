@@ -235,6 +235,20 @@ Statusline (lualine) shows the current branch name at the bottom at all times â€
 | `<leader>to` | Open output for test under cursor |
 | `<leader>tO` | Toggle persistent test output panel |
 
+### Debugging (DAP â€” PHP, JavaScript/TypeScript)
+
+| Key | Action |
+|---|---|
+| `<leader>dc` | Continue / start debug session |
+| `<leader>dn` | Step over (next) |
+| `<leader>di` | Step into |
+| `<leader>do` | Step out |
+| `<leader>db` | Toggle breakpoint |
+| `<leader>dB` | Set conditional breakpoint |
+| `<leader>dr` | Open REPL |
+| `<leader>dl` | Run last debug config |
+| `<leader>du` | Toggle debug UI |
+
 ### Undo history
 
 | Key | Action |

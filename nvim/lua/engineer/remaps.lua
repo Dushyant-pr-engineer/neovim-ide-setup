@@ -27,3 +27,14 @@ end)
 -- vim-tmux-navigator (installed via tmux, see plugins/utilities.lua note)
 -- claims those keys to unify tmux <-> Neovim pane movement. Harpoon's file
 -- nav was remapped to <leader>1-4 in utilities.lua to avoid colliding.
+
+-- Debug keybindings (configured in plugins/debugging.lua):
+-- <leader>dc: continue/start debug session
+-- <leader>dn: step over (next)
+-- <leader>di: step into
+-- <leader>do: step out
+-- <leader>db: toggle breakpoint
+-- <leader>dB: set conditional breakpoint
+-- <leader>dr: open REPL
+-- <leader>dl: run last debug config
+-- <leader>du: toggle debug UI
