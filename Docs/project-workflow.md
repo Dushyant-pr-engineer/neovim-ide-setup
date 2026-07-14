@@ -58,6 +58,7 @@ project root and navigate from inside it:
 | Jump to a known file by name | `<leader>pf` | Telescope find_files — fastest for "I know roughly what it's called" |
 | Jump to a git-tracked file | `Ctrl-p` | Telescope git_files — only works inside a git repo |
 | Search file *contents* across the project | `<leader>ps` | Prompts for a grep string |
+| Search file *contents* within one folder | `<leader>pg` | Prompts for a directory, then a grep string — scoped, unlike `<leader>ps` |
 | Browse the directory tree | `<leader>pv` | Opens netrw (`:Ex`) in the current window |
 | Pin your 3-4 active files and hop between them | `<leader>a` to add, `<leader>1`-`4` to jump | Harpoon — faster than re-fuzzy-finding the same file repeatedly during a task |
 

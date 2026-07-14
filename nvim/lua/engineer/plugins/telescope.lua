@@ -14,6 +14,17 @@ return {
                 builtin.grep_string({ search = vim.fn.input("Grep > ") })
             end)
             vim.keymap.set("n", "<leader>gf", builtin.git_status, { desc = "Changed files (git status)" })
+
+            -- Grep scoped to one folder: prompts for a directory, then a search
+            -- string, and only greps inside that directory (unlike <leader>ps,
+            -- which always searches the whole project).
+            vim.keymap.set("n", "<leader>pg", function()
+                local dir = vim.fn.input("Grep in folder > ", "", "dir")
+                if dir == "" then
+                    return
+                end
+                builtin.live_grep({ search_dirs = { dir } })
+            end, { desc = "Grep string within a folder" })
         end,
     },
 }

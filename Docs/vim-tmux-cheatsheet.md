@@ -165,18 +165,19 @@ Folds start fully open (`foldlevel`/`foldlevelstart = 99`) — these are for whe
 
 ### Windows, buffers, files
 
-| Key                           | Action                                                                                       |
-| ----------------------------- | -------------------------------------------------------------------------------------------- |
-| `<leader>pv`                  | Open file explorer (`:Ex`, custom)                                                           |
-| `<leader>pf`                  | Telescope: find files (custom)                                                               |
-| `Ctrl-p`                      | Telescope: git files (custom)                                                                |
-| `<leader>ps`                  | Telescope: grep string, prompts for input (custom)                                           |
-| `:bn` / `:bp`                 | Next / previous buffer                                                                       |
-| `:bd` / `<leader>bd`          | Close buffer                                                                                 |
-| `Ctrl-w s` / `Ctrl-w v`       | Split window horizontally / vertically                                                       |
-| `<leader>b1` ... `<leader>b9` | Jump directly to buffer tab N (bufferline)                                                   |
-| `Alt-,` / `Alt-.`             | Previous / next buffer tab (bufferline)                                                      |
-| `Ctrl-o` / `Ctrl-i`           | Jump back / forward in jumplist — **the fast way back** after `gd` jumps you to another file |
+| Key                           | Action                                                                                        |
+| ----------------------------- | --------------------------------------------------------------------------------------------- |
+| `<leader>pv`                  | Open file explorer (`:Ex`, custom)                                                            |
+| `<leader>pf`                  | Telescope: find files (custom)                                                                |
+| `Ctrl-p`                      | Telescope: git files (custom)                                                                 |
+| `<leader>ps`                  | Telescope: grep string across the whole project, prompts for input (custom)                   |
+| `<leader>pg`                  | Telescope: grep string scoped to one folder — prompts for a directory, then a search (custom) |
+| `:bn` / `:bp`                 | Next / previous buffer                                                                        |
+| `:bd` / `<leader>bd`          | Close buffer                                                                                  |
+| `Ctrl-w s` / `Ctrl-w v`       | Split window horizontally / vertically                                                        |
+| `<leader>b1` ... `<leader>b9` | Jump directly to buffer tab N (bufferline)                                                    |
+| `Alt-,` / `Alt-.`             | Previous / next buffer tab (bufferline)                                                       |
+| `Ctrl-o` / `Ctrl-i`           | Jump back / forward in jumplist — **the fast way back** after `gd` jumps you to another file  |
 
 `<leader>b1`–`b9` follow the **visible tab numbers** (bufferline `numbers = "ordinal"`). They're separate from Harpoon's `<leader>1`–`4` below — that's a curated 4-file list whose numbers don't track the tab bar.
 
