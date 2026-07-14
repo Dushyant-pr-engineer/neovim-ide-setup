@@ -80,7 +80,7 @@ return {
             },
         })
 
-        vim.keymap.set("n", "<leader>e", "<cmd>Neotree toggle<cr>", { silent = true })
-        vim.keymap.set("n", "<leader>o", "<cmd>Neotree show<cr>", { silent = true })
+        vim.keymap.set("n", "<leader>e", "<cmd>Neotree toggle<cr>", { silent = true, desc = "Toggle file explorer (Neo-tree)" })
+        vim.keymap.set("n", "<leader>o", "<cmd>Neotree show<cr>", { silent = true, desc = "Show file explorer (Neo-tree)" })
     end,
 }

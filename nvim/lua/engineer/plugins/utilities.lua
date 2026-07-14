@@ -8,30 +8,30 @@ return {
             local mark = require("harpoon.mark")
             local ui = require("harpoon.ui")
 
-            vim.keymap.set("n", "<leader>a", mark.add_file)
-            vim.keymap.set("n", "<C-e>", ui.toggle_quick_menu)
+            vim.keymap.set("n", "<leader>a", mark.add_file, { desc = "Add file to Harpoon" })
+            vim.keymap.set("n", "<C-e>", ui.toggle_quick_menu, { desc = "Toggle Harpoon quick menu" })
             -- Remapped off <C-h/j/k/l> (originally Harpoon's file-nav keys) to
             -- <leader>1-4: those keys are claimed by vim-tmux-navigator below
             -- for seamless tmux <-> Neovim pane movement.
-            vim.keymap.set("n", "<leader>1", function() ui.nav_file(1) end)
-            vim.keymap.set("n", "<leader>2", function() ui.nav_file(2) end)
-            vim.keymap.set("n", "<leader>3", function() ui.nav_file(3) end)
-            vim.keymap.set("n", "<leader>4", function() ui.nav_file(4) end)
+            vim.keymap.set("n", "<leader>1", function() ui.nav_file(1) end, { desc = "Jump to Harpoon file 1" })
+            vim.keymap.set("n", "<leader>2", function() ui.nav_file(2) end, { desc = "Jump to Harpoon file 2" })
+            vim.keymap.set("n", "<leader>3", function() ui.nav_file(3) end, { desc = "Jump to Harpoon file 3" })
+            vim.keymap.set("n", "<leader>4", function() ui.nav_file(4) end, { desc = "Jump to Harpoon file 4" })
 
-            vim.keymap.set("n", "<C-S-P>", ui.nav_prev)
-            vim.keymap.set("n", "<C-S-N>", ui.nav_next)
+            vim.keymap.set("n", "<C-S-P>", ui.nav_prev, { desc = "Previous Harpoon file" })
+            vim.keymap.set("n", "<C-S-N>", ui.nav_next, { desc = "Next Harpoon file" })
         end
     },
     {
         "mbbill/undotree",
         config = function()
-            vim.keymap.set("n", "<leader>u", vim.cmd.UndotreeToggle)
+            vim.keymap.set("n", "<leader>u", vim.cmd.UndotreeToggle, { desc = "Toggle Undotree" })
         end
     },
     {
         "tpope/vim-fugitive",
         config = function()
-            vim.keymap.set("n", "<leader>gs", vim.cmd.Git)
+            vim.keymap.set("n", "<leader>gs", vim.cmd.Git, { desc = "Open Git status (fugitive)" })
         end
     },
     {
@@ -63,7 +63,7 @@ return {
             current_line_blame_opts = { delay = 300 },
             on_attach = function(bufnr)
                 local gitsigns = require("gitsigns")
-                vim.keymap.set("n", "<leader>gb", gitsigns.toggle_current_line_blame, { buffer = bufnr })
+                vim.keymap.set("n", "<leader>gb", gitsigns.toggle_current_line_blame, { buffer = bufnr, desc = "Toggle current line blame" })
                 vim.keymap.set("n", "]h", gitsigns.next_hunk, { buffer = bufnr, desc = "Next git hunk" })
                 vim.keymap.set("n", "[h", gitsigns.prev_hunk, { buffer = bufnr, desc = "Prev git hunk" })
                 vim.keymap.set("n", "<leader>hp", gitsigns.preview_hunk, { buffer = bufnr, desc = "Preview hunk diff" })

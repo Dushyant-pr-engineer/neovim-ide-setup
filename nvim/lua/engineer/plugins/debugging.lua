@@ -83,18 +83,21 @@ return {
 
 
       -- Debug keybindings (Mac-friendly)
-      local opts = { noremap = true, silent = true }
-      vim.keymap.set("n", "<Leader>dc", dap.continue, opts)
-      vim.keymap.set("n", "<Leader>dn", dap.step_over, opts)
-      vim.keymap.set("n", "<Leader>di", dap.step_into, opts)
-      vim.keymap.set("n", "<Leader>do", dap.step_out, opts)
-      vim.keymap.set("n", "<Leader>db", dap.toggle_breakpoint, opts)
+      local base_opts = { noremap = true, silent = true }
+      local function opts(desc)
+        return vim.tbl_extend("force", base_opts, { desc = desc })
+      end
+      vim.keymap.set("n", "<Leader>dc", dap.continue, opts("Continue/start debug session"))
+      vim.keymap.set("n", "<Leader>dn", dap.step_over, opts("Step over"))
+      vim.keymap.set("n", "<Leader>di", dap.step_into, opts("Step into"))
+      vim.keymap.set("n", "<Leader>do", dap.step_out, opts("Step out"))
+      vim.keymap.set("n", "<Leader>db", dap.toggle_breakpoint, opts("Toggle breakpoint"))
       vim.keymap.set("n", "<Leader>dB", function()
         dap.set_breakpoint(vim.fn.input("Breakpoint condition: "))
-      end, opts)
-      vim.keymap.set("n", "<Leader>dr", dap.repl.open, opts)
-      vim.keymap.set("n", "<Leader>dl", dap.run_last, opts)
-      vim.keymap.set("n", "<Leader>du", dapui.toggle, opts)
+      end, opts("Set conditional breakpoint"))
+      vim.keymap.set("n", "<Leader>dr", dap.repl.open, opts("Open debug REPL"))
+      vim.keymap.set("n", "<Leader>dl", dap.run_last, opts("Run last debug config"))
+      vim.keymap.set("n", "<Leader>du", dapui.toggle, opts("Toggle debug UI"))
     end,
   },
   {
