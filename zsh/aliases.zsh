@@ -11,8 +11,17 @@ alias policyr="$HOME/src/neovim-ide-setup/tmux/policyr-session.sh"
 alias python="python3 $@"
 alias pip="pip3 $@"
 
-# Utility command alias
-alias c="clear"
+# Local Password file
+alias allPass="cat $HOME/.pass"
+# Saved System password
+alias pass="sed -n '2{p;q;}' ~/.pass | tr -d '\n' | tee /dev/tty | pbcopy"
 
-# Local Password
-alias pass="cat $HOME/.pass"
+
+# Default Command Overwrites
+
+# Clear Screen
+alias c="clear"
+# List all the files in changed dir
+chpwd() {
+    ls -la
+}
