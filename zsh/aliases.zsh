@@ -14,7 +14,7 @@ alias pip="pip3 $@"
 # Local Password file
 alias allPass="cat $HOME/.pass"
 # Saved System password
-alias pass="sed -n '2{p;q;}' ~/.pass | pbcopy && echo Password Copied"
+alias pass="sed -n '2{p;q;}' ~/.pass | tr -d '\n' | pbcopy && echo Password Copied"
 
 
 # Default Command Overwrites
