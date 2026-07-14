@@ -14,6 +14,7 @@ neovim-ide-setup/
 ├── alacritty/alacritty.toml -> ~/.config/alacritty/alacritty.toml (alternative)
 ├── tmux/tmux.conf           -> ~/.tmux.conf
 ├── tmux/policyr-session.sh   # `policyr` alias — recreates + attaches the session
+├── lazygit/config.yml       -> ~/Library/Application Support/lazygit/config.yml
 ├── zsh/                     # Oh-My-Zsh + Powerlevel10k, symlinked into place
 │   ├── zshrc                -> ~/.zshrc               (theme + plugins array; sources ~/.env)
 │   ├── p10k.zsh             -> ~/.p10k.zsh            (Powerlevel10k config)

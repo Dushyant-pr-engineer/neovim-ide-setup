@@ -1,0 +1,20 @@
+customCommands:
+  - key: C
+    context: files
+    description: Commit with Claude-generated message (git-commit skill)
+    output: terminal
+    loadingText: Asking Claude for a commit message…
+    command: |
+      clear
+      if git diff --cached --quiet; then
+        echo 'Nothing staged - stage some changes first.' >&2
+        exit 1
+      fi
+      echo 'Asking Claude for a commit message...'
+      msgfile=$(mktemp)
+      claude -p "/git-commit — generate the commit message only. Output ONLY the raw commit message text (type: subject line, blank line, body bullets, optional REF line), with no markdown code fences, no preamble, and no confirmation question. Do not run git commit yourself." \
+        --output-format text \
+        --allowedTools "Bash(git diff *),Bash(git rev-parse *),Agent(git-commit-drafter)" \
+        > "$msgfile"
+      git commit -e -F "$msgfile"
+      rm -f "$msgfile"

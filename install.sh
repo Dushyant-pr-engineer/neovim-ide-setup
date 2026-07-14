@@ -156,6 +156,9 @@ backup_and_symlink "$SCRIPT_DIR/tmux/tmux.conf" "$HOME/.tmux.conf"
 echo "== Step 5: Neovim =="
 backup_and_symlink "$SCRIPT_DIR/nvim" "$HOME/.config/nvim"
 
+echo "== Step 5a: LazyGit =="
+backup_and_symlink "$SCRIPT_DIR/lazygit/config.yml" "$HOME/Library/Application Support/lazygit/config.yml"
+
 echo "== Step 5b: PHP debug adapter (vscode-php-debug) =="
 PHP_DEBUG_DIR="$HOME/.local/share/vscode-php-debug"
 if [[ ! -d "$PHP_DEBUG_DIR" ]]; then
