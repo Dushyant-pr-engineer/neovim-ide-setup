@@ -1,6 +1,6 @@
 # Font
 font-family = JetBrainsMono Nerd Font
-font-size = 14
+font-size = 16
 font-thicken = true
 
 # Window
@@ -16,14 +16,10 @@ shell-integration = detect
 window-save-state = always
 
 # Theme (Tokyo Night to match the Neovim colorscheme)
-theme = "TokyoNight Storm"
-
-# Pure black window background — solid, no transparency. Set AFTER `theme`
-# so it overrides TokyoNight Storm's own (dark blue) background.
-background = #000000
+theme = "GitHub Dark"
 
 # Cursor / mouse
-cursor-style = block
+cursor-style = bar
 cursor-style-blink = true
 mouse-hide-while-typing = true
 copy-on-select = clipboard

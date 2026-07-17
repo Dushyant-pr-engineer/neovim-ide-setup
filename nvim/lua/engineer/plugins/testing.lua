@@ -49,10 +49,16 @@ return {
                         end,
                     }),
                 },
+                quickfix = {
+                    open = true,
+                },
             })
             local neotest = require("neotest")
             vim.keymap.set("n", "<leader>tt", function() neotest.run.run() end, { desc = "Run nearest test" })
-            vim.keymap.set("n", "<leader>tf", function() neotest.run.run(vim.fn.expand("%")) end, { desc = "Run test file" })
+            vim.keymap.set("n", "<leader>tf", function()
+                neotest.run.run(vim.fn.expand("%"))
+                neotest.summary.open()
+            end, { desc = "Run test file" })
             vim.keymap.set("n", "<leader>ts", function() neotest.summary.toggle() end, { desc = "Toggle test summary" })
             vim.keymap.set("n", "<leader>to", function() neotest.output.open({ enter = true }) end, { desc = "Open test output" })
             vim.keymap.set("n", "<leader>tO", function() neotest.output_panel.toggle() end, { desc = "Toggle test output panel" })

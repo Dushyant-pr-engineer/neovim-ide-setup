@@ -218,6 +218,57 @@ Folds start fully open (`foldlevel`/`foldlevelstart = 99`) — these are for whe
 
 Statusline (lualine) shows the current branch name at the bottom at all times — no key needed.
 
+#### LazyGit essentials (inside the `<leader>gg` popup)
+
+Jump between panels with `<tab>` / `h` / `l`, or `1`-`5` (Status, Files, Branches, Commits, Stash).
+
+##### Committing
+
+| Key                  | Panel  | Action                                                                                            |
+| -------------------- | ------ | ------------------------------------------------------------------------------------------------- |
+| `c`                  | Files  | Commit staged changes (opens editor for message)                                                  |
+| `C`                  | Files  | Commit with Claude-generated message (custom binding, see `lazygit/config.yml`)                   |
+| `A`                  | Files  | Amend last commit                                                                                 |
+| `:cq` then `<enter>` | editor | Bail out of the commit message editor — aborts the commit entirely (or clear the message + `:wq`) |
+
+##### Staging
+
+| Key     | Panel | Action                               |
+| ------- | ----- | ------------------------------------ |
+| `space` | Files | Stage / unstage selected file        |
+| `a`     | Files | Stage / unstage all files            |
+| `x`     | Files | Discard changes to selected file     |
+| `D`     | Files | Reset options menu (mixed/hard/soft) |
+
+##### Branches / checkout
+
+| Key     | Panel    | Action                                   |
+| ------- | -------- | ---------------------------------------- |
+| `space` | Branches | Checkout selected branch                 |
+| `c`     | Branches | Checkout branch by name (type to search) |
+| `-`     | Branches | Checkout previous branch                 |
+| `n`     | Branches | New branch                               |
+| `F`     | Branches | Force checkout (discard local changes)   |
+| `M`     | Branches | Merge selected branch into current       |
+| `r`     | Branches | Rebase current branch onto selected      |
+
+##### Stash
+
+| Key     | Panel | Action                                            |
+| ------- | ----- | ------------------------------------------------- |
+| `s`     | Files | Stash all changes (push)                          |
+| `S`     | Files | Stash options menu (e.g. stash staged only)       |
+| `space` | Stash | Apply selected stash (keeps it in the stash list) |
+| `g`     | Stash | Pop selected stash (applies + removes it)         |
+| `d`     | Stash | Drop selected stash                               |
+
+##### Pull / Push
+
+| Key | Action                      |
+| --- | --------------------------- |
+| `p` | Pull (works from any panel) |
+| `P` | Push (works from any panel) |
+
 ### Harpoon (quick file switching)
 
 | Key                           | Action                                                                                                                                                               |
