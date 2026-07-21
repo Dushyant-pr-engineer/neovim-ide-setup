@@ -2,8 +2,20 @@ return {
     {
         "stevearc/conform.nvim",
         opts = {
+            formatters = {
+                -- Same fixer + standard as policyr's pre-commit hook
+                -- (.git/hooks/pre-commit runs phpcs --standard=phpcs.xml;
+                -- phpcbf is its auto-fix counterpart), so formatting here
+                -- matches what actually gates commits for the team.
+                phpcbf = {
+                    prepend_args = { "--standard=phpcs.xml", "-d", "memory_limit=512M" },
+                    cwd = function(_, ctx)
+                        return vim.fs.root(ctx.dirname, { "composer.json" })
+                    end,
+                },
+            },
             formatters_by_ft = {
-                php = { "php_cs_fixer" },
+                php = { "phpcbf" },
                 javascript = { "prettier" },
                 typescript = { "prettier" },
                 javascriptreact = { "prettier" },
@@ -27,7 +39,10 @@ return {
         dependencies = { "mason-org/mason.nvim" },
         opts = {
             ensure_installed = {
-                "php-cs-fixer", "prettier", "goimports", "gofumpt",
+                -- "phpcs" is the mason package name; it bundles both the
+                -- phpcs and phpcbf binaries. phpcbf is what formatters_by_ft
+                -- actually uses — php-cs-fixer was never referenced anywhere.
+                "phpcs", "prettier", "goimports", "gofumpt",
                 "shfmt", "stylua", "shellcheck", "eslint_d",
             },
         },
