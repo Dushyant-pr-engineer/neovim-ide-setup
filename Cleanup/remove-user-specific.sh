@@ -24,56 +24,30 @@ if [[ -f "$REPO_DIR/tmux/policyr-session.sh" ]]; then
   echo "   ✓ Removed tmux/policyr-session.sh"
 fi
 
-# 2. Remove Policyr-specific development aliases
-if [[ -f "$REPO_DIR/zsh/devAlias.zsh" ]]; then
-  echo "   ✓ Backing up zsh/devAlias.zsh"
-  cp "$REPO_DIR/zsh/devAlias.zsh" "$BACKUP_DIR/"
-  rm "$REPO_DIR/zsh/devAlias.zsh"
-  echo "   ✓ Removed zsh/devAlias.zsh"
+# 2. Remove all Policyr-specific aliases (policyr tmux alias and dev aliases
+# like jstest/phinx/phpunit — all consolidated into zsh/policyrAlias.zsh)
+if [[ -f "$REPO_DIR/zsh/policyrAlias.zsh" ]]; then
+  echo "   ✓ Backing up zsh/policyrAlias.zsh"
+  cp "$REPO_DIR/zsh/policyrAlias.zsh" "$BACKUP_DIR/"
+  rm "$REPO_DIR/zsh/policyrAlias.zsh"
+  echo "   ✓ Removed zsh/policyrAlias.zsh"
 fi
 
-# 3. Remove hardcoded ToWinBook aliases from generalAlias.zsh
-if [[ -f "$REPO_DIR/zsh/generalAlias.zsh" ]]; then
-  echo "   ✓ Cleaning up zsh/generalAlias.zsh"
+# 3. Remove hardcoded ToWinBook aliases from aliases.zsh
+if [[ -f "$REPO_DIR/zsh/aliases.zsh" ]] && grep -q "^alias ToWinBook=\|^alias toWinBook=" "$REPO_DIR/zsh/aliases.zsh"; then
+  echo "   ✓ Cleaning up zsh/aliases.zsh"
 
   # Backup before modification
-  cp "$REPO_DIR/zsh/generalAlias.zsh" "$BACKUP_DIR/"
+  cp "$REPO_DIR/zsh/aliases.zsh" "$BACKUP_DIR/"
 
-  # Remove ToWinBook lines (both cases)
-  sed -i.bak '/^alias ToWinBook=/d; /^alias toWinBook=/d' "$REPO_DIR/zsh/generalAlias.zsh"
-  rm "$REPO_DIR/zsh/generalAlias.zsh.bak"
+  # Remove ToWinBook lines (both cases) and the preceding comment
+  sed -i.bak '/^# Open Win book in terminal$/d; /^alias ToWinBook=/d; /^alias toWinBook=/d' "$REPO_DIR/zsh/aliases.zsh"
+  rm "$REPO_DIR/zsh/aliases.zsh.bak"
 
   echo "   ✓ Removed hardcoded ToWinBook aliases"
 fi
 
-# 4. Remove policyr alias from main aliases if it exists
-if [[ -f "$REPO_DIR/zsh/aliases.zsh" ]]; then
-  if grep -q "alias policyr=" "$REPO_DIR/zsh/aliases.zsh"; then
-    echo "   ✓ Backing up zsh/aliases.zsh"
-    cp "$REPO_DIR/zsh/aliases.zsh" "$BACKUP_DIR/"
-
-    # Remove policyr alias and its definition
-    sed -i.bak '/^# Attach to policyr session/d; /^alias policyr=/d' "$REPO_DIR/zsh/aliases.zsh"
-    rm "$REPO_DIR/zsh/aliases.zsh.bak"
-
-    echo "   ✓ Removed policyr session alias"
-  fi
-fi
-
-# 5. Update .env.example to remove Policyr-specific secrets
-if [[ -f "$REPO_DIR/.env.example" ]]; then
-  echo "   ✓ Cleaning up .env.example"
-
-  cp "$REPO_DIR/.env.example" "$BACKUP_DIR/"
-
-  # Remove Policyr-specific credentials (comment them out or remove)
-  sed -i.bak '/^PR_USERNAME=/d; /^PR_PASSWORD=/d; /^DOCKET_PATH=/d' "$REPO_DIR/.env.example"
-  rm "$REPO_DIR/.env.example.bak"
-
-  echo "   ✓ Removed Policyr-specific credentials from .env.example"
-fi
-
-# 6. Optional: Remove project-specific docs
+# 4. Optional: Remove project-specific docs
 read -p "   Remove project-specific documentation? (project-workflow.md, debugging-setup.md) [y/N]: " -n 1 -r
 echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
@@ -97,9 +71,9 @@ echo "✅ Cleanup complete!"
 echo ""
 echo "📋 Summary:"
 echo "   • Removed Policyr tmux session script"
-echo "   • Removed Policyr development aliases (jstest, phpunit, phinx, etc.)"
+echo "   • Removed zsh/policyrAlias.zsh (policyr tmux alias and dev aliases"
+echo "     like jstest/phinx/phpunit)"
 echo "   • Removed hardcoded machine paths (ToWinBook)"
-echo "   • Cleaned up .env.example"
 echo ""
 echo "💾 Backups saved to: $BACKUP_DIR"
 echo "   (Safe to delete this folder after verifying the cleanup)"

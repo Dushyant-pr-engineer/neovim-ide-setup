@@ -6,15 +6,16 @@ The `neovim-ide-setup` repo includes configurations tailored to the original aut
 
 ### Tmux
 - **`tmux/policyr-session.sh`** — Creates a tmux session specifically for the Policyr project with a fixed layout (nvim top-left, shell bottom-left, Claude Code right). Safe to delete if you don't use this session structure.
-- **`zsh/aliases.zsh`** — Contains the `policyr` alias that attaches to the saved Policyr session. You can edit or delete this alias.
 
 ### Zsh Aliases
-- **`zsh/devAlias.zsh`** — Contains aliases (`jstest`, `phinx`, `phpunit`, etc.) tied to the Policyr project. Safe to delete or customize with your own project aliases.
+
+- **`zsh/policyrAlias.zsh`** — All Policyr-specific aliases, functions, and env vars in one file. Safe to delete or customize with your own project aliases.
+  - `policyr` — attaches to the saved Policyr tmux session
   - `jstest` — runs tests in the Portal project (Policyr-specific)
   - `phpunit`, `pfunit`, `phinx` — Docker aliases for Policyr development
   - `policyr_error_log`, `xdebug_log` — logs specific to Policyr's Docker setup
 
-- **`zsh/generalAlias.zsh`** — Contains:
+- **`zsh/aliases.zsh`** — Contains:
   - `ToWinBook` / `toWinBook` — hardcoded path to user's OneDrive; delete or customize
 
 ### Environment Variables
@@ -44,8 +45,8 @@ bash Cleanup/remove-user-specific.sh
 
 This will:
 - Remove `tmux/policyr-session.sh`
-- Remove `zsh/devAlias.zsh`
-- Remove hardcoded `ToWinBook` aliases from `zsh/generalAlias.zsh`
+- Remove `zsh/policyrAlias.zsh`
+- Remove hardcoded `ToWinBook` aliases from `zsh/aliases.zsh`
 - Remove project-workflow and debugging guide (you can restore these from git if needed)
 
 After cleanup, run `install.sh` to re-symlink the remaining files.
@@ -56,12 +57,11 @@ If you prefer to do it selectively:
 
 1. **Delete Policyr-specific alias file:**
    ```bash
-   rm zsh/devAlias.zsh
+   rm zsh/policyrAlias.zsh
    ```
-   Then remove the `policyr` alias from `zsh/aliases.zsh` if you added it.
 
 2. **Remove ToWinBook aliases:**
-   Edit `zsh/generalAlias.zsh` and delete these lines:
+   Edit `zsh/aliases.zsh` and delete these lines:
    ```bash
    alias ToWinBook="cd /Users/dushyant.patel/Library/CloudStorage/..."
    alias toWinBook="cd /Users/dushyant.patel/Library/CloudStorage/..."
@@ -77,13 +77,8 @@ If you prefer to do it selectively:
    - Update `Docs/debugging-setup.md` with your stack (replace Policyr PHP/JS examples with your own)
 
 5. **Update `.env.example`:**
-   Remove Policyr-specific secrets and add your own:
+   Add your project's own secrets as needed:
    ```bash
-   # Remove these if not needed:
-   # PR_USERNAME=
-   # PR_PASSWORD=
-   
-   # Add your project's secrets:
    # MY_PROJECT_API_KEY=
    ```
 

@@ -20,11 +20,9 @@ neovim-ide-setup/
 │   ├── p10k.zsh             -> ~/.p10k.zsh            (Powerlevel10k config)
 │   ├── plugins.txt          # third-party plugins cloned into $ZSH_CUSTOM/plugins
 │   ├── zshrc.local.example  # copied to ~/.zshrc.local (machine-specific config only; git-ignored)
-│   ├── aliases.zsh          -> $ZSH_CUSTOM/aliases.zsh  (nvim + policyr tmux aliases)
+│   ├── aliases.zsh          -> $ZSH_CUSTOM/aliases.zsh  (nvim + general aliases)
 │   ├── exports.zsh          -> $ZSH_CUSTOM/exports.zsh
-│   ├── devAlias.zsh         -> $ZSH_CUSTOM/devAlias.zsh
-│   ├── generalAlias.zsh     -> $ZSH_CUSTOM/generalAlias.zsh
-│   └── apiTestingAlias.zsh  -> $ZSH_CUSTOM/apiTestingAlias.zsh
+│   └── policyrAlias.zsh     -> $ZSH_CUSTOM/policyrAlias.zsh  (policyr tmux alias, dev aliases, pr-* API testing functions)
 └── nvim/                    -> ~/.config/nvim/
     ├── init.lua
     └── lua/engineer/
@@ -111,8 +109,8 @@ from four places:
 - **`~/.env`** — symlinked to `.env` in the repo. Contains shared secrets
   (API keys, test credentials). Copy `.env.example` → `.env` and fill in real values.
 - **`zsh/*.zsh` snippets** — symlinked into `$ZSH_CUSTOM` and auto-sourced by
-  Oh-My-Zsh (`aliases.zsh`, `exports.zsh`, `devAlias.zsh`, `generalAlias.zsh`,
-  `apiTestingAlias.zsh`). Good for aliases/functions/exports.
+  Oh-My-Zsh (`aliases.zsh`, `exports.zsh`, `policyrAlias.zsh`). Good for
+  aliases/functions/exports.
 - **`~/.zshrc.local`** — machine-specific config only (PATH, php build flags, NVM,
   Docker completions, etc.), sourced last. Stays in home, never committed.
 
@@ -121,7 +119,7 @@ from four places:
 **Shared secrets** (API keys, test credentials used across machines) live in
 `.env` at the project root, which is `.gitignore`d and never committed. `install.sh`
 symlinks `.env` to `~/.env`, so the secrets are automatically available in every
-shell. Examples: `WAKATIME_API_KEY`, `CONTEXT7_API_KEY`, `PR_USERNAME`, `PR_PASSWORD`.
+shell. Examples: `WAKATIME_API_KEY`, `CONTEXT7_API_KEY`.
 See `.env.example` for the template.
 
 **Machine-specific config** (things that vary per machine) lives in `~/.zshrc.local`,

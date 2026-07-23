@@ -2,10 +2,9 @@ alias vim="nvim"
 alias vi="nvim"
 alias v="nvim"
 
-# tmux — attach manually (terminal no longer auto-attaches on launch).
-# `policyr` attaches to the saved PolicyR session, recreating its
-# nvim / shell / claude layout if it isn't running yet.
-alias policyr="$HOME/src/neovim-ide-setup/tmux/policyr-session.sh"
+# Open Win book in terminal
+alias ToWinBook="cd /Users/dushyant.patel/Library/CloudStorage/OneDrive-Valeris/Career\ growth/Win\ Book"
+alias toWinBook="cd /Users/dushyant.patel/Library/CloudStorage/OneDrive-Valeris/Career\ growth/Win\ Book"
 
 # Python 3 usege
 alias python="python3 $@"
