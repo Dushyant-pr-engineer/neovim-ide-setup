@@ -16,10 +16,12 @@
 # export PATH="$HOME/go/bin:$PATH"
 # export PATH="$HOME/.local/bin:$PATH"
 
-# --- NVM ----------------------------------------------------------------------
-# export NVM_DIR="$HOME/.nvm"
-# [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"
-# [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"
+# --- fnm (Fast Node Manager) ---------------------------------------------------
+# Node version manager, install via `brew install fnm`. Native binary — no
+# per-shell subprocess-forking cost like nvm has (worse under EDR/AV agents
+# that intercept subprocess execs, e.g. SentinelOne, CrowdStrike).
+# --use-on-cd auto-switches Node version on `cd` into a dir with .nvmrc/.node-version.
+# eval "$(fnm env --use-on-cd)"
 
 # --- Project paths (machine-specific) -----------------------------------------
 # export POLICYR_PATH="$HOME/src/ops/policyr"  # PolicyR project root (used by tmux/policyr-session.sh, aliases)
