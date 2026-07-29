@@ -53,3 +53,21 @@ vim.lsp.config("gopls", {
         },
     },
 })
+
+vim.lsp.config("tailwindcss", {
+    root_markers = { "tailwind.config.js", "tailwind.config.ts", "package.json" },
+    settings = {
+        tailwindCSS = {
+            classAttributes = { "class", "className", "classList" },
+            lint = {
+                cssConflict = "warning",
+                invalidApply = "error",
+                invalidConfigPath = "error",
+                invalidTailwindDirective = "error",
+                invalidScreen = "error",
+                preferringByWeight = "warning",
+                compatibleVariantOverrides = "error",
+            },
+        },
+    },
+})

@@ -70,7 +70,7 @@ else
 fi
 
 echo "== Step 2: Dependencies (Apple Silicon) =="
-brew install neovim tmux ripgrep fzf coreutils lazygit
+brew install neovim tmux ripgrep fd fzf coreutils lazygit
 brew install --cask font-jetbrains-mono-nerd-font
 brew install node python go pipx
 brew install php composer

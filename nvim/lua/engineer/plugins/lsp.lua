@@ -37,6 +37,7 @@ return {
                 "jsonls", -- JSON
                 "lua_ls", -- Lua (for editing this very config)
                 "marksman", -- Markdown
+                "tailwindcss", -- Tailwind CSS IntelliSense
             },
             -- automatic_enable defaults to true: installed servers get
             -- vim.lsp.enable()'d for you automatically.
